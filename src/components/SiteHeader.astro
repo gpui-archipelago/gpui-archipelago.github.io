@@ -22,7 +22,44 @@ const isNews = pathname.startsWith("/news/");
                 >gpui-archipelago<span class="aka"> (GPUI-lago)</span></span
             >
         </a>
-        <nav aria-label="Site">
+        <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Toggle menu"
+        >
+            <svg
+                class="icon-open"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+            >
+                <line x1="4" y1="7" x2="20" y2="7"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="17" x2="20" y2="17"></line>
+            </svg>
+            <svg
+                class="icon-close"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+            >
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+            </svg>
+        </button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
             <a href="/" aria-current={isHome ? "page" : undefined}>Home</a>
             <a href="/news/" aria-current={isNews ? "page" : undefined}>News</a>
             <a href="https://github.com/gpui-archipelago">GitHub</a>
@@ -92,29 +129,112 @@ const isNews = pathname.startsWith("/news/");
         color: var(--gray-600);
     }
 
-    nav {
+    .site-nav {
         display: flex;
         gap: 28px;
     }
 
-    nav a {
+    .site-nav a {
         font-size: 14px;
         color: var(--gray-600);
         text-decoration: none;
     }
 
-    nav a:hover {
+    .site-nav a:hover {
         color: var(--ink);
         text-decoration: none;
     }
 
-    nav a[aria-current="page"] {
+    .site-nav a[aria-current="page"] {
         color: var(--coral);
     }
 
+    .menu-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 6px;
+        background: none;
+        color: var(--ink);
+        cursor: pointer;
+    }
+
+    .menu-toggle:hover {
+        background: rgba(23, 77, 104, 0.06);
+    }
+
+    .menu-toggle:focus-visible {
+        outline: 2px solid var(--ocean);
+        outline-offset: 2px;
+    }
+
+    .icon-close {
+        display: none;
+    }
+
+    .menu-toggle[aria-expanded="true"] .icon-open {
+        display: none;
+    }
+
+    .menu-toggle[aria-expanded="true"] .icon-close {
+        display: block;
+    }
+
     @media (max-width: 40rem) {
-        nav {
+        .menu-toggle {
+            display: inline-flex;
+        }
+
+        .site-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
             display: none;
+            flex-direction: column;
+            gap: 0;
+            background: var(--paper);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 8px 0 16px;
+            box-shadow: 0 12px 24px rgba(23, 77, 104, 0.08);
+        }
+
+        .site-nav.open {
+            display: flex;
+        }
+
+        .site-nav a {
+            padding: 12px 24px;
+            font-size: 15px;
         }
     }
 </style>
+
+<script>
+    const header = document.querySelector(".site-header");
+    if (header) {
+        const toggle = header.querySelector(".menu-toggle");
+        const nav = header.querySelector(".site-nav");
+        if (toggle && nav) {
+            const close = () => {
+                nav.classList.remove("open");
+                toggle.setAttribute("aria-expanded", "false");
+            };
+            toggle.addEventListener("click", () => {
+                const open = nav.classList.toggle("open");
+                toggle.setAttribute("aria-expanded", String(open));
+            });
+            // Close the menu when a link is chosen or when Escape is pressed.
+            nav.addEventListener("click", (event) => {
+                if (event.target.closest("a")) close();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") close();
+            });
+        }
+    }
+</script>
