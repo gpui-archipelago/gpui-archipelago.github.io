@@ -1,0 +1,640 @@
+---
+// The Manifest: a community-maintained index of projects shipped downstream of
+// GPUI islands. Data lives in src/data/projects.json so "add a project" is a
+// one-file change; projects.schema.json validates it in the editor.
+import manifest from "../data/projects.json";
+
+interface Project {
+    name: string;
+    category: string;
+    subcategory?: string;
+    url: string;
+    image?: string;
+    description: string;
+    /** Fork-only: crate publish status, rendered as a badge when present. */
+    crateStatus?: CrateStatus;
+    crateUrl?: string;
+}
+
+type CrateStatus = "published" | "unpublished" | "pending" | "outdated";
+
+const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
+    published: { glyph: "●", label: "Published" },
+    unpublished: { glyph: "○", label: "Unpublished" },
+    pending: { glyph: "◐", label: "Pending" },
+    outdated: { glyph: "◑", label: "Outdated" },
+};
+
+const projects = manifest.projects as Project[];
+
+// Display order: category first (in this order), then name.
+const CATEGORY_ORDER = ["Apps", "Forks", "Libraries", "Tooling", "Resources"];
+
+const sorted = [...projects].sort((a, b) => {
+    const catDiff =
+        CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category);
+    if (catDiff !== 0) return catDiff;
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+});
+
+const categoryCounts = new Map<string, number>();
+for (const project of projects) {
+    categoryCounts.set(
+        project.category,
+        (categoryCounts.get(project.category) ?? 0) + 1,
+    );
+}
+
+// Subcategory filter chips exist per category that actually has subcategories
+// (Apps today: Developer Tools, Productivity, Media, System Utilities,
+// Demos & Examples). Rendered dynamically so new categories get chips for free.
+interface SubGroup {
+    category: string;
+    subs: { name: string; count: number; all: boolean }[];
+}
+
+const subByCategory = new Map<string, Map<string, number>>();
+for (const project of projects) {
+    if (!project.subcategory) continue;
+    const subs =
+        subByCategory.get(project.category) ?? new Map<string, number>();
+    subs.set(project.subcategory, (subs.get(project.subcategory) ?? 0) + 1);
+    subByCategory.set(project.category, subs);
+}
+
+const subcategoryGroups: SubGroup[] = [...subByCategory.entries()]
+    .map(([category, subs]) => ({
+        category,
+        subs: [
+            {
+                name: "All",
+                count: categoryCounts.get(category) ?? 0,
+                all: true,
+            },
+            ...[...subs.entries()].map(([name, count]) => ({
+                name,
+                count,
+                all: false,
+            })),
+        ],
+    }))
+    .sort(
+        (a, b) =>
+            CATEGORY_ORDER.indexOf(a.category) -
+            CATEGORY_ORDER.indexOf(b.category),
+    );
+
+// Descriptions may contain inline markdown links like [text](url); everything
+// else is trusted plain text from our own data file.
+const renderInlineMd = (text: string) =>
+    text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+
+const total = sorted.length;
+---
+
+<div class="toolbar">
+    <input
+        id="manifest-search"
+        class="search-input"
+        type="search"
+        placeholder="Search projects…"
+        aria-label="Search projects"
+    />
+    <div class="chip-row" role="group" aria-label="Filter by category">
+        <button
+            type="button"
+            class="chip active"
+            data-filter-type="category"
+            data-filter-value="all"
+            aria-pressed="true"
+        >
+            All <span class="chip-count">{total}</span>
+        </button>
+        {
+            CATEGORY_ORDER.filter((category) =>
+                categoryCounts.has(category),
+            ).map((category) => (
+                <button
+                    type="button"
+                    class="chip"
+                    data-filter-type="category"
+                    data-filter-value={category}
+                    aria-pressed="false"
+                >
+                    {category}{" "}
+                    <span class="chip-count">
+                        {categoryCounts.get(category) ?? 0}
+                    </span>
+                </button>
+            ))
+        }
+    </div>
+    <div
+        class="chip-row"
+        id="subcategory-filters"
+        role="group"
+        aria-label="Filter by subcategory"
+        hidden
+    >
+        {
+            subcategoryGroups.map((group) =>
+                group.subs.map((sub) => (
+                    <button
+                        type="button"
+                        class={sub.all ? "chip active" : "chip"}
+                        data-filter-type="subcategory"
+                        data-filter-value={sub.all ? "all" : sub.name}
+                        data-category-for={group.category}
+                        aria-pressed={sub.all ? "true" : "false"}
+                    >
+                        {sub.name} <span class="chip-count">{sub.count}</span>
+                    </button>
+                )),
+            )
+        }
+    </div>
+    <p class="result-count" id="manifest-count" aria-live="polite">
+        Showing {total} of {total} projects
+    </p>
+</div>
+
+<div class="table-scroll">
+    <table class="manifest-table" id="manifest-table">
+        <thead>
+            <tr>
+                <th scope="col" class="col-project">Project</th>
+                <th scope="col" class="col-category">Category</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {
+                sorted.map((project) => (
+                    <tr
+                        data-category={project.category}
+                        data-subcategory={project.subcategory}
+                    >
+                        <td data-label="Project">
+                            <a class="project-name" href={project.url}>
+                                {project.image && (
+                                    <img
+                                        class="project-icon"
+                                        src={project.image}
+                                        alt=""
+                                        loading="lazy"
+                                        decoding="async"
+                                        referrerpolicy="no-referrer"
+                                        onerror="this.style.display='none'"
+                                    />
+                                )}
+                                <span>{project.name}</span>
+                            </a>
+                        </td>
+                        <td data-label="Category">
+                            <span class="category">{project.category}</span>
+                            {project.subcategory && (
+                                <span class="subcategory">
+                                    {project.subcategory}
+                                </span>
+                            )}
+                        </td>
+                        <td class="description" data-label="Description">
+                            <span
+                                set:html={renderInlineMd(project.description)}
+                            />
+                            {project.crateStatus && (
+                                <span class="badge-wrap">
+                                    {project.crateUrl ? (
+                                        <a
+                                            class={`badge badge-${project.crateStatus}`}
+                                            href={project.crateUrl}
+                                        >
+                                            {
+                                                crateStatusMeta[
+                                                    project.crateStatus
+                                                ].glyph
+                                            }{" "}
+                                            {
+                                                crateStatusMeta[
+                                                    project.crateStatus
+                                                ].label
+                                            }
+                                        </a>
+                                    ) : (
+                                        <span
+                                            class={`badge badge-${project.crateStatus}`}
+                                        >
+                                            {
+                                                crateStatusMeta[
+                                                    project.crateStatus
+                                                ].glyph
+                                            }{" "}
+                                            {
+                                                crateStatusMeta[
+                                                    project.crateStatus
+                                                ].label
+                                            }
+                                        </span>
+                                    )}
+                                </span>
+                            )}
+                        </td>
+                    </tr>
+                ))
+            }
+        </tbody>
+    </table>
+</div>
+
+<p class="no-results" id="manifest-empty" hidden>
+    No projects match the current filters.
+</p>
+<p class="table-note">
+    The manifest is maintained by hand in <code>src/data/projects.json</code> — add
+    a project with a PR against the
+    <a href="https://github.com/gpui-archipelago">gpui-archipelago</a> org.
+</p>
+
+<style>
+    [hidden] {
+        display: none !important;
+    }
+
+    /* ---------- Filter toolbar ---------- */
+
+    .toolbar {
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 22rem;
+        padding: 8px 12px;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 14px;
+    }
+
+    .search-input::placeholder {
+        color: var(--gray-600);
+    }
+
+    .search-input:focus {
+        outline: 2px solid var(--ocean);
+        outline-offset: 0;
+        border-color: var(--ocean);
+    }
+
+    .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border: 1px solid var(--gray-200);
+        border-radius: 999px;
+        background: var(--paper);
+        color: var(--gray-600);
+        font-family: var(--font-sans);
+        font-size: 13px;
+        cursor: pointer;
+        transition:
+            color 0.12s ease,
+            border-color 0.12s ease;
+    }
+
+    .chip:hover {
+        color: var(--ink);
+        border-color: var(--ocean);
+    }
+
+    .chip.active {
+        background: rgba(239, 78, 40, 0.12);
+        border-color: rgba(239, 78, 40, 0.35);
+        color: var(--rust);
+    }
+
+    .chip:focus-visible {
+        outline: 2px solid var(--ocean);
+        outline-offset: 2px;
+    }
+
+    .chip-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--gray-600);
+    }
+
+    .chip.active .chip-count {
+        color: var(--rust);
+    }
+
+    .result-count {
+        margin: 12px 0 0;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--gray-600);
+    }
+
+    .no-results {
+        margin: 24px 0 0;
+        color: var(--gray-600);
+    }
+
+    /* ---------- Table ---------- */
+
+    .table-scroll {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        min-width: 36rem;
+        border-collapse: collapse;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-size: 15px;
+    }
+
+    thead th:first-child {
+        border-top-left-radius: 5px;
+    }
+
+    thead th:last-child {
+        border-top-right-radius: 5px;
+    }
+
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 5px;
+    }
+
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 5px;
+    }
+
+    th {
+        background: rgba(250, 224, 183, 0.4);
+        color: var(--gray-600);
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left;
+        padding: 10px 16px;
+    }
+
+    .col-project {
+        width: 24%;
+    }
+
+    .col-category {
+        width: 15%;
+    }
+
+    td {
+        padding: 12px 16px;
+        border-top: 1px solid var(--gray-200);
+        vertical-align: middle;
+    }
+
+    tbody tr:first-child td {
+        border-top: 0;
+    }
+
+    .project-name {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--ink);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+    }
+
+    .project-name:hover {
+        color: var(--coral);
+        text-decoration: none;
+    }
+
+    .project-icon {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        object-fit: cover;
+        border: 1px solid var(--gray-200);
+        border-radius: 4px;
+        background: var(--gray-200);
+    }
+
+    .category {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    .subcategory {
+        display: block;
+        margin-top: 2px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--gray-600);
+    }
+
+    td.description {
+        color: var(--gray-600);
+        font-size: 14px;
+    }
+
+    td.description a {
+        text-decoration: none;
+    }
+
+    td.description a:hover {
+        text-decoration: none;
+    }
+
+    .badge-wrap {
+        display: block;
+        margin-top: 8px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    a.badge:hover {
+        text-decoration: none;
+        filter: brightness(1.08);
+    }
+
+    .badge-published {
+        background: rgba(239, 78, 40, 0.12);
+        color: var(--rust);
+    }
+
+    .badge-unpublished {
+        background: var(--gray-200);
+        color: var(--gray-600);
+    }
+
+    .badge-pending {
+        background: rgba(168, 98, 20, 0.12);
+        color: var(--amber);
+    }
+
+    .badge-outdated {
+        background: rgba(168, 98, 20, 0.12);
+        color: var(--amber);
+    }
+
+    .table-note {
+        margin: 12px 0 0;
+        font-size: 13px;
+        color: var(--gray-600);
+    }
+
+    /* Narrow screens: stack each row as a card, column name above each cell. */
+    @media (max-width: 40rem) {
+        .table-scroll {
+            overflow: visible;
+        }
+
+        table {
+            min-width: 0;
+            border: 0;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody,
+        tr {
+            display: block;
+        }
+
+        tr {
+            margin: 0 0 16px;
+            padding: 0 16px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+        }
+
+        tr:last-child {
+            margin-bottom: 0;
+        }
+
+        td {
+            display: block;
+            border: 0;
+            padding: 12px 0 0;
+        }
+
+        td[data-label]::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+    }
+</style>
+
+<script>
+    const table = document.querySelector<HTMLTableElement>("#manifest-table")!;
+    const rows = Array.from(
+        table.querySelectorAll<HTMLTableRowElement>("tbody tr"),
+    );
+    const total = rows.length;
+    const search =
+        document.querySelector<HTMLInputElement>("#manifest-search")!;
+    const chips = Array.from(
+        document.querySelectorAll<HTMLButtonElement>("[data-filter-type]"),
+    );
+    const subRow = document.querySelector<HTMLElement>("#subcategory-filters");
+    const empty = document.querySelector<HTMLElement>("#manifest-empty")!;
+    const count = document.querySelector<HTMLElement>("#manifest-count")!;
+
+    const state = { category: "all", subcategory: "all", query: "" };
+
+    const apply = () => {
+        let visible = 0;
+        for (const row of rows) {
+            const matchesCategory =
+                state.category === "all" ||
+                row.dataset.category === state.category;
+            const matchesSubcategory =
+                state.subcategory === "all" ||
+                (row.dataset.subcategory ?? "") === state.subcategory;
+            const matchesQuery =
+                state.query === "" ||
+                (row.textContent ?? "").toLowerCase().includes(state.query);
+            const show = matchesCategory && matchesSubcategory && matchesQuery;
+            row.hidden = !show;
+            if (show) visible++;
+        }
+        empty.hidden = visible !== 0;
+        count.textContent = `Showing ${visible} of ${total} projects`;
+    };
+
+    for (const chip of chips) {
+        chip.addEventListener("click", () => {
+            const type = chip.dataset.filterType;
+            const value = chip.dataset.filterValue ?? "";
+            if (type === "category") {
+                state.category = value;
+                state.subcategory = "all";
+                const hasSubs = subRow?.querySelector(
+                    `[data-category-for="${value}"]`,
+                );
+                if (subRow) subRow.hidden = !hasSubs;
+                if (subRow) {
+                    for (const c of subRow.querySelectorAll<HTMLButtonElement>(
+                        '[data-filter-type="subcategory"]',
+                    )) {
+                        const active =
+                            c.dataset.categoryFor === value &&
+                            c.dataset.filterValue === "all";
+                        c.setAttribute("aria-pressed", String(active));
+                        c.classList.toggle("active", active);
+                    }
+                }
+            } else {
+                state.subcategory = value;
+            }
+            for (const c of document.querySelectorAll(
+                `[data-filter-type="${type}"]`,
+            )) {
+                const active = c === chip;
+                c.setAttribute("aria-pressed", String(active));
+                c.classList.toggle("active", active);
+            }
+            apply();
+        });
+    }
+
+    search.addEventListener("input", () => {
+        state.query = search.value.trim().toLowerCase();
+        apply();
+    });
+</script>

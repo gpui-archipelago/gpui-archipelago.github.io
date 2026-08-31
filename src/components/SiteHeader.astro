@@ -5,6 +5,7 @@ import logo from "../assets/logo.png";
 
 const { pathname } = Astro.url;
 const isHome = pathname === "/";
+const isManifest = pathname.startsWith("/manifest");
 const isNews = pathname.startsWith("/news/");
 ---
 
@@ -61,6 +62,9 @@ const isNews = pathname.startsWith("/news/");
         </button>
         <nav id="site-nav" class="site-nav" aria-label="Site">
             <a href="/" aria-current={isHome ? "page" : undefined}>Home</a>
+            <a href="/manifest/" aria-current={isManifest ? "page" : undefined}>
+                Manifest
+            </a>
             <a href="/news/" aria-current={isNews ? "page" : undefined}>News</a>
             <a href="https://github.com/gpui-archipelago">GitHub</a>
         </nav>
