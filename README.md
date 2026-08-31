@@ -26,12 +26,28 @@ src/
 │   ├── ForksTable.astro   # "Forks at a glance" table (fork data lives here)
 │   ├── SiteFooter.astro
 │   └── SiteHeader.astro
+├── content/
+│   └── news/              # News posts as markdown (one file per post)
+├── content.config.ts      # Content collection schema
 ├── layouts/
 │   └── Layout.astro       # HTML shell + global theme (palette & type scale from the design system)
 └── pages/
     ├── index.astro        # Home page
-    └── news.astro         # This Month in GPUI — August Digest
+    └── news/              # /news/ listing + /news/[...slug]/ article pages
 ```
+
+## Adding a news post
+
+1. Add `src/content/news/<slug>.md` with frontmatter (`title`, `date`,
+   `description`) and the post body as markdown.
+2. It automatically appears on `/news/` (newest first) and gets a stable
+   permalink at `/news/<slug>/`. The home page teaser picks up the newest post
+   on its own.
+
+Tables: on narrow screens tables render as stacked cards. For that layout to
+label the cells, use a raw HTML `<table>` (see the August digest) and give each
+`<td>` a `data-label` matching its column header. Plain GFM tables still work —
+they just fall back to horizontal scroll on mobile.
 
 ## Adding a fork
 

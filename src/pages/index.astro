@@ -1,6 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ForksTable from "../components/ForksTable.astro";
+import { getCollection } from "astro:content";
+
+// Latest news post, shown as a teaser at the bottom of the page.
+const latestNews = (await getCollection("news")).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+)[0];
+
+const formatDate = (date: Date) =>
+    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
 const issueFormat = `## The problem
 Written from the perspective of someone who just hit this wall.
@@ -236,24 +245,29 @@ const introForks = [
         </div>
     </section>
 
-    <section class="section news-section">
-        <div class="container">
-            <h2>News</h2>
-            <ul class="news-list">
-                <li>
-                    <a class="news-title" href="/news/"
-                        >This Month in GPUI — August Digest</a
-                    >
-                    <span class="news-date">August 2026</span>
-                    <p>
-                        A milestone month for the GPUI ecosystem: spring
-                        animations and framerate control upstream, standalone
-                        crates.io distributions, Kael 0.4, and web/JS bridges.
-                    </p>
-                </li>
-            </ul>
-        </div>
-    </section>
+    {
+        latestNews && (
+            <section class="section news-section">
+                <div class="container">
+                    <h2>News</h2>
+                    <ul class="news-list">
+                        <li>
+                            <a
+                                class="news-title"
+                                href={`/news/${latestNews.id}/`}
+                            >
+                                {latestNews.data.title}
+                            </a>
+                            <span class="news-date">
+                                {formatDate(latestNews.data.date)}
+                            </span>
+                            <p>{latestNews.data.description}</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        )
+    }
 </Layout>
 
 <style>

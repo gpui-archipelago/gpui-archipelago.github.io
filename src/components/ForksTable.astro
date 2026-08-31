@@ -3,14 +3,20 @@
 // Star/fork counts are manually maintained; consider fetching from the GitHub
 // API at build time if you want them to stay current automatically.
 
-type CrateStatus = "published" | "unpublished" | "pending";
+type CrateStatus = "published" | "unpublished" | "pending" | "outdated";
 
 interface Fork {
     name: string;
     url: string;
-    stars: number;
-    forks: number;
+    stars?: number;
+    forks?: number;
     crateStatus: CrateStatus;
+    /** crates.io page for the crate, when one exists (badge becomes a link). */
+    crateUrl?: string;
+    /** Row carries a footnote marker (see the note under the table). */
+    footnote?: boolean;
+    /** Marked as the practical path to current upstream crates. */
+    mirror?: boolean;
 }
 
 const forks: Fork[] = [
@@ -19,14 +25,17 @@ const forks: Fork[] = [
         url: "https://github.com/zed-industries/zed",
         stars: 88000,
         forks: 10000,
-        crateStatus: "pending",
+        crateStatus: "outdated",
+        crateUrl: "https://crates.io/crates/gpui",
+        footnote: true,
     },
     {
         name: "gpui-ce",
         url: "https://github.com/gpui-ce/gpui-ce",
         stars: 925,
         forks: 105,
-        crateStatus: "pending",
+        crateStatus: "published",
+        crateUrl: "https://crates.io/crates/gpui-ce",
     },
     {
         name: "gpui-unofficial",
@@ -34,6 +43,8 @@ const forks: Fork[] = [
         stars: 44,
         forks: 7,
         crateStatus: "published",
+        crateUrl: "https://crates.io/crates/gpui-unofficial",
+        mirror: true,
     },
     {
         name: "WGPUI",
@@ -48,6 +59,13 @@ const forks: Fork[] = [
         stars: 34,
         forks: 2,
         crateStatus: "published",
+        crateUrl: "https://crates.io/crates/kael",
+    },
+    {
+        name: "GPUI Box",
+        url: "https://github.com/fran0220/gpui-box",
+        crateStatus: "published",
+        crateUrl: "https://crates.io/crates/gpui-box",
     },
 ];
 
@@ -55,6 +73,7 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
     published: { glyph: "●", label: "Published" },
     unpublished: { glyph: "○", label: "Unpublished" },
     pending: { glyph: "◐", label: "Pending" },
+    outdated: { glyph: "◑", label: "Outdated" },
 };
 ---
 
@@ -74,21 +93,40 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
                     const meta = crateStatusMeta[fork.crateStatus];
                     return (
                         <tr>
-                            <td>
+                            <td data-label="Fork">
                                 <a class="fork-name" href={fork.url}>
                                     {fork.name}
                                 </a>
+                                {fork.mirror && (
+                                    <span class="mirror-tag">
+                                        upstream mirror
+                                    </span>
+                                )}
                             </td>
-                            <td class="num">
-                                {fork.stars.toLocaleString("en-US")}
+                            <td class="num" data-label="Stars">
+                                {fork.stars?.toLocaleString("en-US") ?? "—"}
                             </td>
-                            <td class="num">
-                                {fork.forks.toLocaleString("en-US")}
+                            <td class="num" data-label="Forks">
+                                {fork.forks?.toLocaleString("en-US") ?? "—"}
                             </td>
-                            <td>
-                                <span class={`badge badge-${fork.crateStatus}`}>
-                                    {meta.glyph} {meta.label}
-                                </span>
+                            <td data-label="Crate">
+                                {fork.crateUrl ? (
+                                    <a
+                                        class={`badge badge-${fork.crateStatus}`}
+                                        href={fork.crateUrl}
+                                    >
+                                        {meta.glyph} {meta.label}
+                                        {fork.footnote && (
+                                            <sup class="footnote-mark">†</sup>
+                                        )}
+                                    </a>
+                                ) : (
+                                    <span
+                                        class={`badge badge-${fork.crateStatus}`}
+                                    >
+                                        {meta.glyph} {meta.label}
+                                    </span>
+                                )}
                             </td>
                         </tr>
                     );
@@ -97,6 +135,12 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
         </tbody>
     </table>
 </div>
+<p class="table-footnote">
+    † The official <code>gpui</code> crate on crates.io is months behind upstream.
+    For current upstream crates, use <a
+        href="https://crates.io/crates/gpui-unofficial">gpui-unofficial</a
+    > — an automated mirror of upstream Zed.
+</p>
 <p class="table-note">
     Star and fork counts are manually maintained — help keep them current.
 </p>
@@ -166,6 +210,23 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
         text-decoration: none;
     }
 
+    .footnote-mark {
+        font-size: 11px;
+        margin-left: 2px;
+    }
+
+    .mirror-tag {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--gray-600);
+        background: rgba(250, 224, 183, 0.4);
+        vertical-align: 1px;
+    }
+
     td.num {
         font-family: var(--font-mono);
         color: var(--gray-600);
@@ -180,6 +241,11 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
         font-size: 13px;
         font-weight: 500;
         white-space: nowrap;
+    }
+
+    a.badge:hover {
+        text-decoration: none;
+        filter: brightness(1.08);
     }
 
     .badge-published {
@@ -197,9 +263,66 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
         color: var(--amber);
     }
 
+    .badge-outdated {
+        background: rgba(168, 98, 20, 0.12);
+        color: var(--amber);
+    }
+
+    .table-footnote,
     .table-note {
         margin: 12px 0 0;
         font-size: 13px;
         color: var(--gray-600);
+    }
+
+    /* Narrow screens: stack each row as a card, column name above each cell. */
+    @media (max-width: 40rem) {
+        .table-scroll {
+            overflow: visible;
+        }
+
+        table {
+            min-width: 0;
+            border: 0;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody,
+        tr {
+            display: block;
+        }
+
+        tr {
+            margin: 0 0 16px;
+            padding: 0 16px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+        }
+
+        tr:last-child {
+            margin-bottom: 0;
+        }
+
+        td {
+            display: block;
+            border: 0;
+            padding: 12px 0 0;
+        }
+
+        td.num {
+            text-align: left;
+        }
+
+        td[data-label]::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
     }
 </style>
