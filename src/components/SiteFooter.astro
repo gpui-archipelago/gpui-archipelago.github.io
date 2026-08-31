@@ -1,0 +1,56 @@
+---
+// Site-wide footer — quiet, metadata-sized.
+---
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <p>
+            gpui-archipelago — every fork is an island. Here they can find each
+            other.
+        </p>
+        <p class="status">
+            <a href="https://github.com/gpui-archipelago"
+                >github.com/gpui-archipelago</a
+            >
+            <span aria-hidden="true"> · </span>
+            <a href="https://discord.gg/bcuR88Z8ku">discord</a>
+            <span aria-hidden="true"> · </span>still extremely alpha
+        </p>
+    </div>
+</footer>
+
+<style>
+    .site-footer {
+        border-top: 1px solid var(--gray-200);
+        margin-top: 64px;
+    }
+
+    .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem 2rem;
+        padding-block: 32px;
+        padding-inline: 24px;
+        max-width: 80rem;
+        margin-inline: auto;
+    }
+
+    .site-footer p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--gray-600);
+    }
+
+    .status {
+        font-family: var(--font-mono);
+    }
+
+    .status a {
+        color: var(--gray-600);
+    }
+
+    .status a:hover {
+        color: var(--coral);
+    }
+</style>

@@ -1,0 +1,120 @@
+---
+// The mark appears exactly once per page: here, in the header, badge-sized
+// next to the wordmark.
+import logo from "../assets/logo.png";
+
+const { pathname } = Astro.url;
+const isHome = pathname === "/";
+const isNews = pathname.startsWith("/news/");
+---
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="/">
+            <img
+                class="logo"
+                src={logo.src}
+                width={logo.width}
+                height={logo.height}
+                alt=""
+            />
+            <span class="wordmark"
+                >gpui-archipelago<span class="aka"> (GPUI-lago)</span></span
+            >
+        </a>
+        <nav aria-label="Site">
+            <a href="/" aria-current={isHome ? "page" : undefined}>Home</a>
+            <a href="/news/" aria-current={isNews ? "page" : undefined}>News</a>
+            <a href="https://github.com/gpui-archipelago">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<style>
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 64px;
+        padding-inline: 24px;
+        max-width: 80rem;
+        margin-inline: auto;
+    }
+
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--ink);
+    }
+
+    .brand:hover {
+        text-decoration: none;
+        color: var(--ink);
+    }
+
+    .brand:hover .wordmark {
+        color: var(--coral);
+    }
+
+    .logo {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        display: block;
+        flex-shrink: 0;
+    }
+
+    .wordmark {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        transition: color 0.12s ease;
+    }
+
+    .aka {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--gray-600);
+    }
+
+    nav {
+        display: flex;
+        gap: 28px;
+    }
+
+    nav a {
+        font-size: 14px;
+        color: var(--gray-600);
+        text-decoration: none;
+    }
+
+    nav a:hover {
+        color: var(--ink);
+        text-decoration: none;
+    }
+
+    nav a[aria-current="page"] {
+        color: var(--coral);
+    }
+
+    @media (max-width: 40rem) {
+        nav {
+            display: none;
+        }
+    }
+</style>

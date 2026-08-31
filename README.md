@@ -1,46 +1,40 @@
-# Astro Starter Kit: Basics
+# gpui-archipelago-site
 
-```sh
-bun create astro@latest -- --template basics
-```
+The website for [gpui-archipelago](https://github.com/gpui-archipelago/gpui-archipelago) — a
+community-maintained space for anyone building with GPUI outside of Zed.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> Every fork is an island. There's no mainland and no one's building one, so the islands have to
+> find each other. Here they can.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Built with [Astro](https://astro.build).
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command               | Action                                           |
+| :-------------------- | :----------------------------------------------- |
+| `bun install`         | Installs dependencies                            |
+| `bun run dev`         | Starts local dev server at `localhost:4321`      |
+| `bun run build`       | Build your production site to `./dist/`          |
+| `bun run preview`     | Preview your build locally, before deploying     |
+| `bun run astro ...`   | Run CLI commands like `astro add`, `astro check` |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+## Project structure
 
-## 👀 Want to learn more?
+```text
+src/
+├── components/
+│   ├── ForksTable.astro   # "Forks at a glance" table (fork data lives here)
+│   ├── SiteFooter.astro
+│   └── SiteHeader.astro
+├── layouts/
+│   └── Layout.astro       # HTML shell + global theme (palette & type scale from the design system)
+└── pages/
+    ├── index.astro        # Home page
+    └── news.astro         # This Month in GPUI — August Digest
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Adding a fork
+
+Fork entries are a single data array at the top of `src/components/ForksTable.astro` — name, URL,
+star/fork counts, and crate status. Star counts are manually maintained; the comment there notes
+how to switch to fetching them from the GitHub API at build time.

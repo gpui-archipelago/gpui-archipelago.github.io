@@ -1,0 +1,559 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Trusted static markup only (defined in this file); <code> keeps crate and API
+// identifiers in monospace per the data/prose split.
+const distributions = [
+    {
+        family: "GPUI Unofficial Mirror",
+        packages: [
+            {
+                name: "gpui-unofficial",
+                url: "https://crates.io/crates/gpui-unofficial",
+            },
+            {
+                name: "gpui-component-uo",
+                url: "https://crates.io/crates/gpui-component-uo",
+            },
+        ],
+        lineage:
+            "<strong>Straight from upstream Zed.</strong> <code>gpui-unofficial</code> is an automated mirror tracking bleeding-edge upstream snapshots directly (e.g., <code>1.17.0-pre</code>), paired with <code>gpui-component-uo</code> — a redistribution of Longbridge’s <code>gpui-component</code> synced up to <code>gpui-unofficial</code>.",
+    },
+    {
+        family: "GPUI Community Edition",
+        packages: [
+            { name: "gpui-ce", url: "https://crates.io/crates/gpui-ce" },
+            {
+                name: "gpui_ce_components",
+                url: "https://crates.io/crates/gpui_ce_components",
+            },
+        ],
+        lineage:
+            "<strong>Derivative fork with custom patches.</strong> Tailored for standalone desktop apps, paired with <code>gpui_ce_components</code> (a published fork of Longbridge’s component suite) for a pure <code>crates.io</code> dependency workflow without git overrides.",
+    },
+    {
+        family: "GPUI Box",
+        packages: [
+            { name: "gpui-box", url: "https://crates.io/crates/gpui-box" },
+            {
+                name: "gpui-box-platform",
+                url: "https://crates.io/crates/gpui-box-platform",
+            },
+            {
+                name: "gpui-box-kit",
+                url: "https://crates.io/crates/gpui-box-kit",
+            },
+        ],
+        lineage:
+            "<strong>Independent distribution cohort.</strong> A self-contained <code>0.1.x</code> package family and product-neutral component system (<code>gpui_kit</code>) for native and browser interfaces with an authoritative token model.",
+    },
+    {
+        family: "Kael",
+        packages: [
+            { name: "kael", url: "https://crates.io/crates/kael" },
+            { name: "kael_ui", url: "https://crates.io/crates/kael_ui" },
+            {
+                name: "kael_document",
+                url: "https://crates.io/crates/kael_document",
+            },
+        ],
+        lineage:
+            "<strong>Fork-derived application framework.</strong> Formerly the <code>adabraka</code> fork, now published as an independent, resource-efficient GPU runtime with pre-built themeable UI components and WebAssembly support.",
+    },
+];
+---
+
+<Layout
+    title="This Month in GPUI — August Digest"
+    description="A milestone month for the GPUI ecosystem: spring animations and framerate control upstream, the first standalone crates.io distributions, Kael 0.4, gpuix, and the gpui_shell scripting runtime."
+>
+    <div class="page-header">
+        <div class="container">
+            <p class="kicker">news</p>
+            <h1>This Month in GPUI — August Digest</h1>
+            <p class="meta">August 2026</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <div class="prose">
+                <p>
+                    August marked a major milestone for the GPUI ecosystem.
+                    Between rapid foundational updates landing in upstream Zed
+                    and community initiatives delivering standalone
+                    distributions, pure <code>crates.io</code> packaging, web showcases,
+                    and dynamic scripting runtimes, building GPU-accelerated desktop
+                    and browser interfaces in Rust is advancing quickly.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>The GPUI Archipelago &amp; Release Tracking</h2>
+            <p class="lede">
+                As GPUI branches out into standalone apps, web showcases, and
+                specialized runtimes, community tooling has stepped in to unify
+                discovery and release tracking.
+            </p>
+            <ul>
+                <li>
+                    <strong
+                        ><a href="https://github.com/gpui-archipelago"
+                            >GPUI Archipelago</a
+                        >:</strong
+                    > A community umbrella founded on the philosophy that <em
+                        >“Every fork is an island. There’s no mainland and no
+                        one’s stranded.”</em
+                    > It serves as a neutral hub for cross-fork discovery, toolchain
+                    experiments, and shared documentation.
+                </li>
+                <li>
+                    <strong
+                        ><a
+                            href="https://github.com/gpui-archipelago/gpui-release-notes"
+                            >gpui-release-notes</a
+                        >:</strong
+                    >
+                    Upstream GPUI development moves rapidly within Zed’s monorepo.
+                    This project isolates, tracks, and categorizes framework-specific
+                    changes so downstream maintainers do not have to filter through
+                    thousands of editor-specific commits.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Upstream Highlights: v1.12.0 through v1.17.2</h2>
+            <p class="lede">
+                Over recent release cycles, GPUI received major upgrades across
+                physics animations, rendering backends, accessibility, and
+                platform integration:
+            </p>
+
+            <h3>Motion, Animations &amp; Framerate Control</h3>
+            <ul>
+                <li>
+                    <strong>Spring Animations (v1.17.2):</strong> Physics-based simulation
+                    primitives (<code>SpringConfig</code>, <code
+                        >SpringState</code
+                    >) modeled after SwiftUI, featuring natural momentum and
+                    mid-flight interruptibility.
+                </li>
+                <li>
+                    <strong
+                        >Animation &amp; Inactive Throttling (v1.17.2):</strong
+                    > Added
+                    <code>Animation::fps(...)</code> to cap animation refresh rates
+                    on high-Hz displays, plus <code
+                        >WindowOptions::inactive_frame_interval</code
+                    > for background window frame throttling.
+                </li>
+                <li>
+                    <strong>Synced Animations (v1.16.1):</strong> Introduced
+                    <code>Animation::repeat_synced()</code> to lock repeating element
+                    animations to a single shared phase clock.
+                </li>
+            </ul>
+
+            <h3>Core Architecture &amp; Layout</h3>
+            <ul>
+                <li>
+                    <strong>Unified <code>View</code> Trait (v1.12.0):</strong> Consolidated
+                    <code>Render</code> and <code>RenderOnce</code> into a single,
+                    unified <code>View</code>
+                    trait across the framework.
+                </li>
+                <li>
+                    <strong
+                        >External Embedding &amp; Host Loops (v1.12.0):</strong
+                    > Added
+                    <code>run_embedded</code> and <code>ApplicationHandle</code> to
+                    drive GPUI event loops from external orchestrators.
+                </li>
+                <li>
+                    <strong>Layout Enhancements:</strong> Container queries (<code
+                        >container_query</code
+                    > in v1.12.0), <code>grid_rows_min_content</code> / <code
+                        >grid_rows_max_content</code
+                    >
+                    (v1.14.2), and Taffy CSS layout engine upgrades (0.12.2).
+                </li>
+                <li>
+                    <strong>Axis-Locked Scrolling (v1.15.0):</strong> Fixed trackpad
+                    gesture ambiguity where horizontal scrolling inadvertently triggered
+                    vertical containers.
+                </li>
+            </ul>
+
+            <h3>Rendering, SVG &amp; Web Backends</h3>
+            <ul>
+                <li>
+                    <strong>WebGL Backend (v1.15.0):</strong> Broadened web support
+                    to Linux browsers where WebGPU is unavailable.
+                </li>
+                <li>
+                    <strong>Raw SVG &amp; Multi-Scale Caching:</strong>
+                    <code>svg::data(...)</code> and
+                    <code>SvgSize::ExactSize</code> (v1.17.2) for raw byte rasterization,
+                    alongside
+                    <code>ParsedSvg</code> (v1.16.1) to avoid re-parsing SVGs during
+                    continuous scaling.
+                </li>
+                <li>
+                    <strong>Web Runtime APIs:</strong> Added async clipboard access,
+                    image paste, streaming
+                    <code>Fetch</code> response bodies (v1.17.2), and background worker
+                    fetch requests (v1.14.2).
+                </li>
+            </ul>
+
+            <h3>Platform Integrations &amp; Tooling</h3>
+            <ul>
+                <li>
+                    <strong>Simple Fullscreen on macOS (v1.17.2):</strong> Notch-covering
+                    borderless fullscreen without creating a new Mission Control space
+                    (<code>Window::toggle_simple_fullscreen()</code>).
+                </li>
+                <li>
+                    <strong>Wayland &amp; Linux Enhancements:</strong> Native Wayland
+                    popups (<code>xdg_popup</code>), exclusive edge zones
+                    (v1.12.0), and outbound drag-and-drop (<code
+                        >wl_data_source</code
+                    >, v1.15.0).
+                </li>
+                <li>
+                    <strong>Apple Platform Groundwork (v1.17.2):</strong> Extracted
+                    <code>gpui_apple</code>
+                    to prepare the foundation for upcoming iOS/iPadOS runtimes alongside
+                    initial touch APIs (v1.12.0).
+                </li>
+                <li>
+                    <strong>Accessibility &amp; Diagnostics:</strong> Native accessibility
+                    identifiers (<code>.accessibility_id(...)</code> in v1.16.1 for
+                    AX, UIA, AT-SPI), on-screen debug histograms (v1.17.2), and deterministic
+                    test settling (<code>BenchAppContext::settle()</code>).
+                </li>
+                <li>
+                    <strong>Toolchain:</strong> Baseline compiler requirement bumped
+                    to
+                    <code>rustc 1.97</code> (Edition 2024 ready).
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Crates.io Packaging &amp; Distributions</h2>
+            <p class="lede">
+                Consuming GPUI as a standard Cargo dependency historically
+                required pointing to upstream git repositories. August
+                established multiple distribution options directly on
+                <code>crates.io</code>:
+            </p>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Distribution / Family</th>
+                            <th scope="col">Crates.io Packages</th>
+                            <th scope="col">Lineage &amp; Architecture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            distributions.map((d) => (
+                                <tr>
+                                    <td class="family">{d.family}</td>
+                                    <td class="packages">
+                                        {d.packages.map((p) => (
+                                            <a href={p.url}>{p.name}</a>
+                                        ))}
+                                    </td>
+                                    <td class="lineage" set:html={d.lineage} />
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Standalone Frameworks &amp; UI Kits</h2>
+
+            <h3>GPUI Box &amp; <code>gpui_kit</code></h3>
+            <p class="lede">
+                Created by <a href="https://github.com/fran0220/gpui-box"
+                    >fran0220</a
+                >, featuring an experimental browser catalog at <a
+                    href="https://gpui-box.origingame.dev/"
+                    >gpui-box.origingame.dev</a
+                >
+                (currently in early alpha):
+            </p>
+            <ul>
+                <li>
+                    <strong>Self-Contained 0.1.x Cohort:</strong> Publishes framework
+                    and platform crates (<code>gpui-box</code>, <code
+                        >gpui-box-platform</code
+                    >, <code>gpui-box-kit</code>,
+                    <code>gpui-box-wgpu</code>) with zero direct Cargo
+                    dependency on Zed.
+                </li>
+                <li>
+                    <strong>Product-Neutral <code>gpui_kit</code>:</strong> Decouples
+                    UI components, scene builders, and layout primitives from editor-specific
+                    domain logic.
+                </li>
+                <li>
+                    <strong>Tooling &amp; Tokens:</strong> Features centralized JSON
+                    design tokens, deterministic scene test fixtures, and a Developer
+                    MCP.
+                </li>
+            </ul>
+
+            <h3>Kael &amp; <code>kael_ui</code> 0.4 Release</h3>
+            <p class="lede">
+                The <a href="https://github.com/Augani/kael">Kael project</a> (formerly
+                the
+                <code>adabraka</code> GPUI fork) shipped its <strong
+                    >v0.4 release</strong
+                > to crates.io:
+            </p>
+            <ul>
+                <li>
+                    <strong>Two-Layer Architecture:</strong>
+                    <code>kael</code> serves as the core GPU runtime and window manager,
+                    while <code>kael_ui</code> provides an optional, themeable component
+                    suite (inputs, overlays, data tables, navigation, and bundled
+                    Lucide icons).
+                </li>
+                <li>
+                    <strong>Resource-Efficient Runtime:</strong> Emphasizes zero unnecessary
+                    redraws, bounded caches, and explicit capability reporting across
+                    platforms.
+                </li>
+                <li>
+                    <strong>Modular Batteries:</strong> WebView, reqwest HTTP transports,
+                    and dotLottie playback are strictly opt-in feature flags.
+                </li>
+                <li>
+                    <strong>Web &amp; Document Support:</strong> Includes <code
+                        >wasm32</code
+                    > browser compatibility alongside <code>kael_document</code> for
+                    handling crash-recovery snapshots and session state across native
+                    storage and browser persistence layers.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>GPUI &amp; Web / JS Ecosystem Bridges</h2>
+            <p class="lede">
+                Bridges between GPUI, the web platform, and
+                JavaScript/TypeScript ecosystems are expanding quickly:
+            </p>
+            <ul>
+                <li>
+                    <strong>Wasm &amp; Direct Browser Compilation:</strong> Upstream
+                    improvements — including WebGL fallback support, streaming <code
+                        >Fetch</code
+                    > bodies, and async clipboard interactions — make compiling native
+                    GPUI applications directly to WebAssembly and hosting them smoothly
+                    in the browser practical without custom web shims.
+                </li>
+                <li>
+                    <strong
+                        ><code>gpuix</code> — React-Driven Native Elements:</strong
+                    > Much like React Native, <a
+                        href="https://github.com/remorses/gpuix"
+                        ><code>gpuix</code></a
+                    > allows developers to drive native GPUI elements directly from
+                    React and TypeScript. Using
+                    <code>napi-rs</code> on desktop and <code>wasm-bindgen</code
+                    > on web, a custom React reconciler mutates the GPUI element tree
+                    directly (avoiding JSON serialization and HTML DOM overhead) with
+                    full Bun Fast Refresh support.
+                </li>
+                <li>
+                    <strong
+                        ><code>gpui_shell</code> — Dynamic TypeScript Control from
+                        Rust:</strong
+                    >
+                    Longbridge’s
+                    <a
+                        href="https://longbridge.github.io/gpui-component/shell/#gpui-shell"
+                        ><code>gpui_shell</code></a
+                    >
+                    integrates an embedded QuickJS runtime into native Rust applications.
+                    Dynamic TypeScript plugins describe UI layouts into an arena without
+                    WebViews or HTML, rendering at 120 FPS under a strict least-privilege
+                    capability model (<code>gpui-shell.json</code>) with
+                    auto-generated types.
+                </li>
+            </ul>
+        </div>
+    </section>
+</Layout>
+
+<style>
+    /* ---------- Page header ---------- */
+
+    .page-header {
+        padding-block: 64px 32px;
+        border-bottom: 1px solid rgba(55, 143, 189, 0.35);
+    }
+
+    .kicker {
+        margin: 0 0 12px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+    }
+
+    .meta {
+        margin: 8px 0 0;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--gray-600);
+    }
+
+    /* ---------- Sections ---------- */
+
+    .section {
+        padding-block: 32px;
+        border-bottom: 1px solid rgba(55, 143, 189, 0.35);
+    }
+
+    .section:last-of-type {
+        border-bottom: 0;
+    }
+
+    .section h2 {
+        margin: 0 0 16px;
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+    }
+
+    .section h3 {
+        margin: 32px 0 12px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.3;
+    }
+
+    .lede {
+        margin: 0 0 24px;
+    }
+
+    .section .container > :last-child {
+        margin-bottom: 0;
+    }
+
+    .section ul {
+        margin: 0 0 24px;
+        padding-left: 1.4em;
+    }
+
+    .section li {
+        margin-bottom: 12px;
+    }
+
+    .section li:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ---------- Distributions table ---------- */
+
+    .table-scroll {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        min-width: 32rem;
+        border-collapse: collapse;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-size: 15px;
+    }
+
+    thead th:first-child {
+        border-top-left-radius: 5px;
+    }
+
+    thead th:last-child {
+        border-top-right-radius: 5px;
+    }
+
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 5px;
+    }
+
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 5px;
+    }
+
+    th {
+        background: rgba(250, 224, 183, 0.4);
+        color: var(--gray-600);
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left;
+        padding: 10px 16px;
+    }
+
+    td {
+        padding: 12px 16px;
+        border-top: 1px solid var(--gray-200);
+        vertical-align: top;
+    }
+
+    tbody tr:first-child td {
+        border-top: 0;
+    }
+
+    .family {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .packages a {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--ink);
+        text-decoration: none;
+    }
+
+    .packages a + a {
+        margin-top: 2px;
+    }
+
+    .packages a:hover {
+        color: var(--coral);
+        text-decoration: none;
+    }
+</style>
