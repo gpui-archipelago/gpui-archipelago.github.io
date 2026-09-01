@@ -1,158 +1,162 @@
 /* Shared table treatment (design system §4.2). Covers the forks-at-a-glance
  * hero table, the Manifest table, and tables inside markdown prose — the same
  * hairline rules, sand-tinted header, and card-stacking on narrow screens.
- */
+ * Lives in Tailwind's `components` layer so utilities (min-w-[…], max-sm:…)
+ * can override it. */
 
-.table-scroll {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    /* Per-table minimum width (30/36/32rem) is supplied by each table as
-       --table-min-width, because a bare `min-width` in a scoped component
-       rule would outrank this global base AND the mobile reset below (equal
-       specificity, scoped styles are injected later). Routing it through a
-       custom property keeps the media-query reset order-independent. */
-    min-width: var(--table-min-width, 30rem);
-    border-collapse: collapse;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    font-size: 15px;
-}
-
-thead th:first-child {
-    border-top-left-radius: 5px;
-}
-
-thead th:last-child {
-    border-top-right-radius: 5px;
-}
-
-tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 5px;
-}
-
-tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 5px;
-}
-
-th {
-    background: var(--sand-tint);
-    color: var(--gray-600);
-    font-size: var(--type-small);
-    font-weight: 500;
-    text-align: left;
-    padding: 10px 16px;
-}
-
-td {
-    padding: 12px 16px;
-    border-top: 1px solid var(--gray-200);
-    vertical-align: middle;
-}
-
-tbody tr:first-child td {
-    border-top: 0;
-}
-
-/* Row hover/focus is the comparison table's single highest-weight interactive
-   moment (design system §4.2): the background shifts to a low-opacity sand.
-   The name column deepens to rust on the same trigger, per table. */
-tbody tr:hover td,
-tbody tr:focus-within td {
-    background: var(--sand-tint);
-}
-
-/* Numeric cells are data: monospace, right-aligned, tabular. */
-td.num {
-    font-family: var(--font-mono);
-    color: var(--gray-600);
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-}
-
-th.num {
-    text-align: right;
-}
-
-.table-note,
-.table-footnote {
-    margin: var(--space-sm) 0 0;
-    font-size: var(--type-small);
-    color: var(--gray-600);
-}
-
-/* Markdown tables inside prose get a scroll container instead of a wrapper. */
-.prose table {
-    --table-min-width: 32rem;
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    margin: 0 0 24px;
-}
-
-.prose td {
-    vertical-align: top;
-}
-
-/* Narrow screens: stack each row as a card with the column name above each
-   cell. Selectors are qualified by .table-scroll / .prose so they outrank the
-   scoped rules of the components that render those tables. */
-@media (max-width: 40rem) {
+@layer components {
     .table-scroll {
-        overflow: visible;
+        overflow-x: auto;
     }
 
-    .table-scroll table,
-    .prose table {
-        min-width: 0;
-        border: 0;
+    table {
+        width: 100%;
+        /* Per-table minimum width (30/36/32rem) is supplied either as a
+		   Tailwind utility (min-w-[…]) or, for markdown tables, as the
+		   --table-min-width custom property — never as a bare `min-width`
+		   in a scoped component rule, which would outrank the mobile reset. */
+        min-width: var(--table-min-width, 30rem);
+        border-collapse: collapse;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        font-size: 15px;
     }
 
-    .table-scroll thead,
-    .prose thead {
-        display: none;
+    thead th:first-child {
+        border-top-left-radius: 5px;
     }
 
-    .table-scroll tbody,
-    .table-scroll tr,
-    .prose tbody,
-    .prose tr {
-        display: block;
+    thead th:last-child {
+        border-top-right-radius: 5px;
     }
 
-    .table-scroll tr,
-    .prose tr {
-        margin: 0 0 16px;
-        padding: 0 16px 12px;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 5px;
     }
 
-    .table-scroll tr:last-child,
-    .prose tr:last-child {
-        margin-bottom: 0;
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 5px;
     }
 
-    .table-scroll td,
-    .prose td {
-        display: block;
-        border: 0;
-        padding: 12px 0 0;
-    }
-
-    .table-scroll td.num {
-        text-align: left;
-    }
-
-    .table-scroll td[data-label]::before,
-    .prose td[data-label]::before {
-        content: attr(data-label);
-        display: block;
-        margin-bottom: 2px;
-        font-size: var(--type-small);
+    th {
+        background: var(--surface-warm);
+        color: var(--content-muted);
+        font-size: var(--text-small);
         font-weight: 500;
-        color: var(--gray-600);
+        text-align: left;
+        padding: 10px 16px;
+    }
+
+    td {
+        padding: 12px 16px;
+        border-top: 1px solid var(--border-subtle);
+        vertical-align: middle;
+    }
+
+    tbody tr:first-child td {
+        border-top: 0;
+    }
+
+    /* Row hover/focus is the comparison table's single highest-weight
+	   interactive moment (design system §4.2): the background shifts to a
+	   low-opacity sand. The name column deepens to rust on the same trigger,
+	   per table (via group-hover / group-focus-within utilities). */
+    body tr:hover td,
+    tbody tr:focus-within td {
+        background: var(--surface-warm);
+    }
+
+    /* Numeric cells are data: monospace, right-aligned, tabular. */
+    td.num {
+        font-family: var(--font-mono);
+        color: var(--content-muted);
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    th.num {
+        text-align: right;
+    }
+
+    .table-note,
+    .table-footnote {
+        margin: var(--spacing-sm) 0 0;
+        font-size: var(--text-small);
+        color: var(--content-muted);
+    }
+
+    /* Markdown tables inside prose get a scroll container instead of a
+	   wrapper. */
+    .prose table {
+        --table-min-width: 32rem;
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        margin: 0 0 24px;
+    }
+
+    .prose td {
+        vertical-align: top;
+    }
+
+    /* Narrow screens: stack each row as a card with the column name above
+	   each cell. Selectors are qualified by .table-scroll / .prose so they
+	   outrank the scoped rules of the components that render those tables. */
+    @media (max-width: 40rem) {
+        .table-scroll {
+            overflow: visible;
+        }
+
+        .table-scroll table,
+        .prose table {
+            min-width: 0;
+            border: 0;
+        }
+
+        .table-scroll thead,
+        .prose thead {
+            display: none;
+        }
+
+        .table-scroll tbody,
+        .table-scroll tr,
+        .prose tbody,
+        .prose tr {
+            display: block;
+        }
+
+        .table-scroll tr,
+        .prose tr {
+            margin: 0 0 16px;
+            padding: 0 16px 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+        }
+
+        .table-scroll tr:last-child,
+        .prose tr:last-child {
+            margin-bottom: 0;
+        }
+
+        .table-scroll td,
+        .prose td {
+            display: block;
+            border: 0;
+            padding: 12px 0 0;
+        }
+
+        .table-scroll td.num {
+            text-align: left;
+        }
+
+        .table-scroll td[data-label]::before,
+        .prose td[data-label]::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 2px;
+            font-size: var(--text-small);
+            font-weight: 500;
+            color: var(--content-muted);
+        }
     }
 }

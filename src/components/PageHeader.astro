@@ -1,7 +1,9 @@
 ---
 // Page header: kicker + display title + meta, plus optional slot content (the
 // home hero's blockquote, the Manifest's illustration). The "sand" variant
-// paints the warm band used on the Manifest page.
+// paints the warm band used on the Manifest page (the gradient itself lives
+// in global.css as .page-header-sand — a bespoke treatment utilities would
+// obscure).
 interface Props {
     title: string;
     kicker?: string;
@@ -15,93 +17,40 @@ const isSand = variant === "sand";
 const hasKicker = Boolean(kicker || Astro.slots.has("kicker"));
 ---
 
-<header class={`page-header${isSand ? " sand" : ""}`}>
-    <div class="container">
-        <div class="header-copy">
+<header
+    class={`border-b border-border-divider ${
+        isSand
+            ? "page-header-sand relative overflow-hidden py-12"
+            : "pt-16 pb-8"
+    }`}
+>
+    <div class={`content ${isSand ? "relative" : ""}`}>
+        {/* The copy clears the illustration's corner on the sand variant. */}
+        <div
+            class={isSand
+                ? "relative z-10 max-w-[calc(100%-12rem)] max-sm:max-w-[calc(100%-8.5rem)]"
+                : undefined}
+        >
             {
                 hasKicker && (
-                    <p class="kicker">
+                    <p class="mb-3 font-mono text-small uppercase tracking-[0.08em] text-content-muted">
                         <slot name="kicker">{kicker}</slot>
                     </p>
                 )
             }
-            <h1>{title}</h1>
-            {meta && <p class="meta">{meta}</p>}
+            <h1
+                class="m-0 text-display font-semibold tracking-[-0.01em] leading-[1.2]"
+            >
+                {title}
+            </h1>
+            {
+                meta && (
+                    <p class="mt-2 font-mono text-small text-content-muted">
+                        {meta}
+                    </p>
+                )
+            }
         </div>
         <slot />
     </div>
 </header>
-
-<style>
-    .page-header {
-        padding-block: var(--space-2xl) var(--space-lg);
-        border-bottom: 1px solid var(--ocean-hairline);
-    }
-
-    .kicker {
-        margin: 0 0 var(--space-sm);
-        font-family: var(--font-mono);
-        font-size: var(--type-small);
-        color: var(--gray-600);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    .kicker a {
-        color: var(--gray-600);
-        text-decoration: none;
-    }
-
-    .kicker a:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    .page-header h1 {
-        margin: 0;
-        font-size: var(--type-display);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-    }
-
-    .meta {
-        margin: var(--space-xs) 0 0;
-        font-family: var(--font-mono);
-        font-size: var(--type-small);
-        color: var(--gray-600);
-    }
-
-    /* ---- Manifest variant: symmetric sand band (design system §5) ---- */
-    .sand {
-        position: relative;
-        overflow: hidden;
-        padding-block: var(--space-xl);
-        /* Fades at the top and bottom melt the band out of the white
-           site-header and into the body — no hard edges. */
-        background: linear-gradient(
-            to bottom,
-            rgba(250, 224, 183, 0) 0%,
-            var(--sand-tint-strong) 20px,
-            var(--sand-tint-strong) calc(100% - 20px),
-            rgba(250, 224, 183, 0) 100%
-        );
-    }
-
-    /* The illustration anchors to the content column; the copy clears it. */
-    .sand .container {
-        position: relative;
-    }
-
-    .sand .header-copy {
-        position: relative;
-        z-index: 2;
-        max-width: calc(100% - 12rem);
-    }
-
-    @media (max-width: 40rem) {
-        .sand .header-copy {
-            max-width: calc(100% - 8.5rem);
-        }
-    }
-</style>

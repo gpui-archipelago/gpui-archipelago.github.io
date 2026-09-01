@@ -32,7 +32,7 @@ const forks = (manifest.projects as Fork[]).filter(
 ---
 
 <div class="table-scroll">
-    <table>
+    <table class="min-w-120 max-sm:min-w-0">
         <thead>
             <tr>
                 <th scope="col">Fork</th>
@@ -44,16 +44,25 @@ const forks = (manifest.projects as Fork[]).filter(
         <tbody>
             {
                 forks.map((fork) => (
-                    <tr>
+                    // The row is the hover/focus group: on either trigger the
+                    // sand background (shared table.css) and the name's rust
+                    // deepen together — the comparison table's single
+                    // highest-weight interactive moment (design system §4.2).
+                    <tr class="group">
                         <td data-label="Fork">
-                            <a class="fork-name" href={fork.url}>
+                            <a
+                                class="font-mono text-code text-content no-underline group-hover:text-on-action group-focus-within:text-on-action"
+                                href={fork.url}
+                            >
                                 {fork.name}
                             </a>
                             {fork.maintenance && (
                                 <MaintenanceDot state={fork.maintenance} />
                             )}
                             {fork.tag && (
-                                <span class="fork-tag">{fork.tag}</span>
+                                <span class="ml-2 inline-block rounded-sm bg-surface-warm px-1.5 py-px align-[1px] font-mono text-[11px] text-content-muted">
+                                    {fork.tag}
+                                </span>
                             )}
                         </td>
                         <td class="num" data-label="Stars">
@@ -85,38 +94,3 @@ const forks = (manifest.projects as Fork[]).filter(
     Star and fork counts are manually maintained in the Manifest — help keep
     them current.
 </p>
-
-<style>
-    /* Minimum width is a custom property read by the shared table.css base,
-       so the shared mobile reset (min-width: 0) can outrank it. */
-    table {
-        --table-min-width: 30rem;
-    }
-
-    .fork-name {
-        font-family: var(--font-mono);
-        font-size: var(--type-code);
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    /* Row hover/focus deepens the name to rust — the comparison table's single
-       highest-weight interactive moment (design system §4.2); the sand
-       background shift is shared in table.css. */
-    tbody tr:hover .fork-name,
-    tbody tr:focus-within .fork-name {
-        color: var(--rust);
-    }
-
-    .fork-tag {
-        display: inline-block;
-        margin-left: 8px;
-        padding: 1px 6px;
-        border-radius: var(--radius-sm);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        color: var(--gray-600);
-        background: var(--sand-tint);
-        vertical-align: 1px;
-    }
-</style>

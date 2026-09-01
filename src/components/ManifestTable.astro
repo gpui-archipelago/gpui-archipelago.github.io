@@ -89,25 +89,37 @@ const renderInlineMd = (text: string) =>
         .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
 
 const total = sorted.length;
+
+// Filter chips: the pressed state is carried entirely by aria-pressed (the
+// group class lets the count inside share the state), so the JS never touches
+// a class list — styling comes from aria-pressed: variants.
+const chipBase =
+    "group inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border-subtle bg-surface px-3 py-1.5 text-small text-content-muted transition-colors hover:border-focus hover:text-content aria-pressed:border-action/35 aria-pressed:bg-action-tint aria-pressed:text-on-action";
+const chipCount =
+    "font-mono text-[12px] text-content-muted group-aria-pressed:text-on-action";
 ---
 
-<div class="toolbar">
+<div class="mb-5">
     <input
         id="manifest-search"
-        class="search-input"
+        class="w-full max-w-88 rounded-md border border-border-subtle bg-surface px-3 py-2 font-sans text-sm text-content placeholder:text-content-muted focus:border-focus focus:outline-2 focus:outline-focus focus:outline-offset-0"
         type="search"
         placeholder="Search projects…"
         aria-label="Search projects"
     />
-    <div class="chip-row" role="group" aria-label="Filter by category">
+    <div
+        class="mt-3 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter by category"
+    >
         <button
             type="button"
-            class="chip active"
+            class={chipBase}
             data-filter-type="category"
             data-filter-value="all"
             aria-pressed="true"
         >
-            All <span class="chip-count">{total}</span>
+            All <span class={chipCount}>{total}</span>
         </button>
         {
             CATEGORY_ORDER.filter((category) =>
@@ -115,13 +127,13 @@ const total = sorted.length;
             ).map((category) => (
                 <button
                     type="button"
-                    class="chip"
+                    class={chipBase}
                     data-filter-type="category"
                     data-filter-value={category}
                     aria-pressed="false"
                 >
                     {category}{" "}
-                    <span class="chip-count">
+                    <span class={chipCount}>
                         {categoryCounts.get(category) ?? 0}
                     </span>
                 </button>
@@ -129,7 +141,7 @@ const total = sorted.length;
         }
     </div>
     <div
-        class="chip-row"
+        class="mt-3 flex flex-wrap gap-2"
         id="subcategory-filters"
         role="group"
         aria-label="Filter by subcategory"
@@ -140,29 +152,33 @@ const total = sorted.length;
                 group.subs.map((sub) => (
                     <button
                         type="button"
-                        class={sub.all ? "chip active" : "chip"}
+                        class={chipBase}
                         data-filter-type="subcategory"
                         data-filter-value={sub.all ? "all" : sub.name}
                         data-category-for={group.category}
                         aria-pressed={sub.all ? "true" : "false"}
                     >
-                        {sub.name} <span class="chip-count">{sub.count}</span>
+                        {sub.name} <span class={chipCount}>{sub.count}</span>
                     </button>
                 )),
             )
         }
     </div>
-    <p class="result-count" id="manifest-count" aria-live="polite">
+    <p
+        class="mt-3 font-mono text-small text-content-muted"
+        id="manifest-count"
+        aria-live="polite"
+    >
         Showing {total} of {total} projects
     </p>
 </div>
 
 <div class="table-scroll">
-    <table class="manifest-table" id="manifest-table">
+    <table class="min-w-144 max-sm:min-w-0" id="manifest-table">
         <thead>
             <tr>
-                <th scope="col" class="col-project">Project</th>
-                <th scope="col" class="col-category">Category</th>
+                <th scope="col" class="w-[24%]">Project</th>
+                <th scope="col" class="w-[15%]">Category</th>
                 <th scope="col">Description</th>
             </tr>
         </thead>
@@ -174,10 +190,13 @@ const total = sorted.length;
                         data-subcategory={project.subcategory}
                     >
                         <td data-label="Project">
-                            <a class="project-name" href={project.url}>
+                            <a
+                                class="inline-flex items-center gap-2.5 font-mono text-code font-medium text-content no-underline overflow-wrap-anywhere hover:text-action"
+                                href={project.url}
+                            >
                                 {project.image && (
                                     <img
-                                        class="project-icon"
+                                        class="h-5.5 w-5.5 shrink-0 rounded-sm border border-border-subtle bg-border-subtle object-cover"
                                         src={project.image}
                                         alt=""
                                         loading="lazy"
@@ -190,19 +209,24 @@ const total = sorted.length;
                             </a>
                         </td>
                         <td data-label="Category">
-                            <span class="category">{project.category}</span>
+                            <span class="block text-small font-semibold text-content">
+                                {project.category}
+                            </span>
                             {project.subcategory && (
-                                <span class="subcategory">
+                                <span class="mt-0.5 block font-mono text-[12px] text-content-muted">
                                     {project.subcategory}
                                 </span>
                             )}
                         </td>
-                        <td class="description" data-label="Description">
+                        <td
+                            class="text-sm text-content-muted"
+                            data-label="Description"
+                        >
                             <span
                                 set:html={renderInlineMd(project.description)}
                             />
                             {project.crateStatus && (
-                                <span class="badge-wrap">
+                                <span class="mt-2 block">
                                     <CrateStatusBadge
                                         status={project.crateStatus}
                                         href={project.crateUrl}
@@ -217,7 +241,7 @@ const total = sorted.length;
     </table>
 </div>
 
-<p class="no-results" id="manifest-empty" hidden>
+<p class="mt-6 text-content-muted" id="manifest-empty" hidden>
     No projects match the current filters.
 </p>
 <p class="table-note">
@@ -225,180 +249,6 @@ const total = sorted.length;
     a project with a PR against the
     <a href="https://github.com/gpui-archipelago">gpui-archipelago</a> org.
 </p>
-
-<style>
-    [hidden] {
-        display: none !important;
-    }
-
-    /* ---------- Filter toolbar ---------- */
-
-    .toolbar {
-        margin-bottom: 20px;
-    }
-
-    .search-input {
-        width: 100%;
-        max-width: 22rem;
-        padding: 8px 12px;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
-        background: var(--paper);
-        color: var(--ink);
-        font-family: var(--font-sans);
-        font-size: 14px;
-    }
-
-    .search-input::placeholder {
-        color: var(--gray-600);
-    }
-
-    .search-input:focus {
-        outline: 2px solid var(--ocean);
-        outline-offset: 0;
-        border-color: var(--ocean);
-    }
-
-    .chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 12px;
-    }
-
-    .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
-        border: 1px solid var(--gray-200);
-        border-radius: 999px;
-        background: var(--paper);
-        color: var(--gray-600);
-        font-family: var(--font-sans);
-        font-size: 13px;
-        cursor: pointer;
-        transition:
-            color 0.12s ease,
-            border-color 0.12s ease;
-    }
-
-    .chip:hover {
-        color: var(--ink);
-        border-color: var(--ocean);
-    }
-
-    .chip.active {
-        background: rgba(239, 78, 40, 0.12);
-        border-color: rgba(239, 78, 40, 0.35);
-        color: var(--rust);
-    }
-
-    .chip:focus-visible {
-        outline-offset: 2px;
-    }
-
-    .chip-count {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--gray-600);
-    }
-
-    .chip.active .chip-count {
-        color: var(--rust);
-    }
-
-    .result-count {
-        margin: 12px 0 0;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    .no-results {
-        margin: 24px 0 0;
-        color: var(--gray-600);
-    }
-
-    /* ---------- Table ---------- */
-    /* Shared table chrome — hairlines, sand-tinted header, row hover, and the
-       mobile card stacking — lives in src/styles/table.css. Only the column
-       widths and cell contents differ here. */
-
-    /* Minimum width is a custom property read by the shared table.css base,
-       so the shared mobile reset (min-width: 0) can outrank it. */
-    table {
-        --table-min-width: 36rem;
-    }
-
-    .col-project {
-        width: 24%;
-    }
-
-    .col-category {
-        width: 15%;
-    }
-
-    .project-name {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--font-mono);
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--ink);
-        text-decoration: none;
-        overflow-wrap: anywhere;
-    }
-
-    .project-name:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    .project-icon {
-        width: 22px;
-        height: 22px;
-        flex-shrink: 0;
-        object-fit: cover;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius-sm);
-        background: var(--gray-200);
-    }
-
-    .category {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--ink);
-    }
-
-    .subcategory {
-        display: block;
-        margin-top: 2px;
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--gray-600);
-    }
-
-    td.description {
-        color: var(--gray-600);
-        font-size: 14px;
-    }
-
-    td.description a {
-        text-decoration: none;
-    }
-
-    td.description a:hover {
-        text-decoration: none;
-    }
-
-    .badge-wrap {
-        display: block;
-        margin-top: 8px;
-    }
-</style>
 
 <script>
     const table = document.querySelector<HTMLTableElement>("#manifest-table")!;
@@ -452,11 +302,13 @@ const total = sorted.length;
                     for (const c of subRow.querySelectorAll<HTMLButtonElement>(
                         '[data-filter-type="subcategory"]',
                     )) {
-                        const active =
-                            c.dataset.categoryFor === value &&
-                            c.dataset.filterValue === "all";
-                        c.setAttribute("aria-pressed", String(active));
-                        c.classList.toggle("active", active);
+                        c.setAttribute(
+                            "aria-pressed",
+                            String(
+                                c.dataset.categoryFor === value &&
+                                    c.dataset.filterValue === "all",
+                            ),
+                        );
                     }
                 }
             } else {
@@ -465,9 +317,7 @@ const total = sorted.length;
             for (const c of document.querySelectorAll(
                 `[data-filter-type="${type}"]`,
             )) {
-                const active = c === chip;
-                c.setAttribute("aria-pressed", String(active));
-                c.classList.toggle("active", active);
+                c.setAttribute("aria-pressed", String(c === chip));
             }
             apply();
         });

@@ -9,29 +9,47 @@ const isManifest = pathname.startsWith("/manifest");
 const isNews = pathname.startsWith("/news/");
 ---
 
-<header class="site-header">
-    <div class="header-inner">
-        <a class="brand" href="/">
+<header
+    class="sticky top-0 z-10 border-b border-border-subtle bg-surface/90 backdrop-blur"
+>
+    <div
+        class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-6"
+    >
+        <a
+            class="group flex items-center gap-3 text-content no-underline hover:text-content"
+            href="/"
+        >
             <img
-                class="logo"
+                class="block h-11 w-11 shrink-0 object-contain"
                 src={logo.src}
                 width={logo.width}
                 height={logo.height}
                 alt=""
             />
-            <span class="wordmark"
-                >gpui-archipelago<span class="aka"> (GPUI-lago)</span></span
+            <span
+                class="font-mono text-code font-semibold tracking-tight transition-colors group-hover:text-action"
+                >gpui-archipelago<span
+                    class="font-sans text-small font-normal text-content-muted"
+                >
+                    (GPUI-lago)</span
+                ></span
             >
         </a>
+        {
+            /* The toggle is both the `group` for its icons and the `peer` for the
+            mobile menu: the menu's visibility is driven entirely by
+            aria-expanded, so the JS never manages a second class. */
+        }
         <button
-            class="menu-toggle"
+            class="group peer hidden h-10 w-10 items-center justify-center rounded-md p-0 text-content hover:bg-ink/6 max-sm:inline-flex"
             type="button"
+            id="menu-toggle"
             aria-expanded="false"
             aria-controls="site-nav"
             aria-label="Toggle menu"
         >
             <svg
-                class="icon-open"
+                class="h-6 w-6 group-aria-expanded:hidden"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -46,7 +64,7 @@ const isNews = pathname.startsWith("/news/");
                 <line x1="4" y1="17" x2="20" y2="17"></line>
             </svg>
             <svg
-                class="icon-close"
+                class="hidden h-6 w-6 group-aria-expanded:block"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -60,180 +78,53 @@ const isNews = pathname.startsWith("/news/");
                 <line x1="18" y1="6" x2="6" y2="18"></line>
             </svg>
         </button>
-        <nav id="site-nav" class="site-nav" aria-label="Site">
-            <a href="/" aria-current={isHome ? "page" : undefined}>Home</a>
-            <a href="/manifest/" aria-current={isManifest ? "page" : undefined}>
-                Manifest
-            </a>
-            <a href="/news/" aria-current={isNews ? "page" : undefined}>News</a>
-            <a href="https://github.com/gpui-archipelago">GitHub</a>
+        <nav
+            id="site-nav"
+            class="flex gap-7 max-sm:absolute max-sm:inset-x-0 max-sm:top-full max-sm:flex-col max-sm:gap-0 max-sm:border-b max-sm:border-border-subtle max-sm:bg-surface max-sm:pb-4 max-sm:shadow-[0_12px_24px_rgba(23,77,104,0.08)] max-sm:hidden peer-aria-expanded:max-sm:flex"
+            aria-label="Site"
+        >
+            <a
+                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
+                href="/"
+                aria-current={isHome ? "page" : undefined}>Home</a
+            >
+            <a
+                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
+                href="/manifest/"
+                aria-current={isManifest ? "page" : undefined}>Manifest</a
+            >
+            <a
+                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
+                href="/news/"
+                aria-current={isNews ? "page" : undefined}>News</a
+            >
+            <a
+                class="text-sm text-content-muted no-underline hover:text-content max-sm:px-6 max-sm:py-3 max-sm:text-code"
+                href="https://github.com/gpui-archipelago">GitHub</a
+            >
         </nav>
     </div>
 </header>
 
-<style>
-    .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--gray-200);
-    }
-
-    .header-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        height: 64px;
-        padding-inline: 24px;
-        max-width: 80rem;
-        margin-inline: auto;
-    }
-
-    .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        color: var(--ink);
-    }
-
-    .brand:hover {
-        text-decoration: none;
-        color: var(--ink);
-    }
-
-    .brand:hover .wordmark {
-        color: var(--coral);
-    }
-
-    .logo {
-        width: 44px;
-        height: 44px;
-        object-fit: contain;
-        display: block;
-        flex-shrink: 0;
-    }
-
-    .wordmark {
-        font-family: var(--font-mono);
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        transition: color 0.12s ease;
-    }
-
-    .aka {
-        font-family: var(--font-sans);
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--gray-600);
-    }
-
-    .site-nav {
-        display: flex;
-        gap: 28px;
-    }
-
-    .site-nav a {
-        font-size: 14px;
-        color: var(--gray-600);
-        text-decoration: none;
-    }
-
-    .site-nav a:hover {
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    .site-nav a[aria-current="page"] {
-        color: var(--coral);
-    }
-
-    .menu-toggle {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border: 0;
-        border-radius: 6px;
-        background: none;
-        color: var(--ink);
-        cursor: pointer;
-    }
-
-    .menu-toggle:hover {
-        background: rgba(23, 77, 104, 0.06);
-    }
-
-    .icon-close {
-        display: none;
-    }
-
-    .menu-toggle[aria-expanded="true"] .icon-open {
-        display: none;
-    }
-
-    .menu-toggle[aria-expanded="true"] .icon-close {
-        display: block;
-    }
-
-    @media (max-width: 40rem) {
-        .menu-toggle {
-            display: inline-flex;
-        }
-
-        .site-nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            display: none;
-            flex-direction: column;
-            gap: 0;
-            background: var(--paper);
-            border-bottom: 1px solid var(--gray-200);
-            padding: 8px 0 16px;
-            box-shadow: 0 12px 24px rgba(23, 77, 104, 0.08);
-        }
-
-        .site-nav.open {
-            display: flex;
-        }
-
-        .site-nav a {
-            padding: 12px 24px;
-            font-size: 15px;
-        }
-    }
-</style>
-
 <script>
-    const header = document.querySelector(".site-header");
-    if (header) {
-        const toggle = header.querySelector(".menu-toggle");
-        const nav = header.querySelector(".site-nav");
-        if (toggle && nav) {
-            const close = () => {
-                nav.classList.remove("open");
-                toggle.setAttribute("aria-expanded", "false");
-            };
-            toggle.addEventListener("click", () => {
-                const open = nav.classList.toggle("open");
-                toggle.setAttribute("aria-expanded", String(open));
-            });
-            // Close the menu when a link is chosen or when Escape is pressed.
-            nav.addEventListener("click", (event) => {
-                if (event.target.closest("a")) close();
-            });
-            document.addEventListener("keydown", (event) => {
-                if (event.key === "Escape") close();
-            });
-        }
+    const toggle = document.querySelector("#menu-toggle");
+    const nav = document.querySelector("#site-nav");
+    if (toggle && nav) {
+        const setOpen = (open: boolean) =>
+            toggle.setAttribute("aria-expanded", String(open));
+        const close = () => setOpen(false);
+
+        toggle.addEventListener("click", () => {
+            setOpen(toggle.getAttribute("aria-expanded") !== "true");
+        });
+        // Close the menu when a link is chosen or when Escape is pressed.
+        nav.addEventListener("click", (event) => {
+            if (event.target instanceof Element && event.target.closest("a")) {
+                close();
+            }
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") close();
+        });
     }
 </script>

@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "./base.css";
+@import "./table.css";
+@import "./prose.css";
+
+/* ---------------------------------------------------------------------------
+ * Three layers, per the design-system conventions:
+ *
+ * 1. Primitives (@theme)      — the raw palette, measured from the mark.
+ * 2. Semantics (:root)        — roles, not colors: surfaces, content, action,
+ *    warning, borders, focus. This is the swap point for dark mode, contrast
+ *    passes, or a brand change — nothing in markup needs to move.
+ * 3. Components (@layer)      — bespoke treatments utilities would obscure
+ *    (the Manifest sand band), and the shared table/prose systems.
+ *
+ * @theme inline exposes the semantic roles as utilities (bg-surface,
+ * text-content-muted, hover:text-action, border-border-subtle, …) while
+ * keeping the generated CSS referencing the role variables, so overriding a
+ * role in :root propagates everywhere.
+ * ------------------------------------------------------------------------- */
+
+/* ---- Layer 1: primitives, measured from the mark ---- */
+@theme {
+    --color-ink: #174d68; /* body text, headings — passes AA on paper alone */
+    --color-coral: #ef4e28; /* the one accent: links, active states */
+    --color-coral-bright: #fd6f43; /* hover on coral elements only */
+    --color-rust: #cb3b1b; /* text on tinted fills (badges, chips, row hover) */
+    --color-ocean: #378fbd; /* focus rings, accent borders, water motif */
+    --color-island: #7dab59; /* reserved for the "solved" state */
+    --color-sand: #fae0b7; /* warm neutral: code blocks, table headers */
+    --color-paper: #ffffff;
+    --color-amber: #a86214; /* "needs a maintainer" state */
+    --color-gray-600: #5b6368; /* muted content */
+    --color-gray-200: #dde1e3; /* hairline borders, table rules */
+
+    /* Tints — fills derived from the palette (never for text) */
+    --color-coral-tint: rgba(239, 78, 40, 0.12);
+    --color-sand-tint: rgba(250, 224, 183, 0.4);
+    --color-sand-tint-strong: rgba(250, 224, 183, 0.5);
+    --color-amber-tint: rgba(168, 98, 20, 0.12);
+    --color-ocean-hairline: rgba(55, 143, 189, 0.35);
+
+    /* Type (design system §2) */
+    --font-sans: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+
+    /* Major-third scale (1.25), base 16px. Role names, not element names. */
+    --text-display: 40px; /* page title only */
+    --text-h1: 32px; /* section headers */
+    --text-h2: 25px; /* subsection headers */
+    --text-h3: 20px; /* minor headers */
+    --text-body: 16px;
+    --text-small: 13px;
+    --text-code: 15px;
+
+    --leading-body: 1.6;
+    --leading-code: 1.5;
+
+    /* Spacing (design system §5) */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 20px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+    --spacing-2xl: 64px;
+
+    /* Layout */
+    --container-prose: 72ch; /* prose line-length cap */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+}
+
+/* ---- Layer 2: semantic roles ---- */
+:root {
+    /* Surfaces */
+    --surface: var(--color-paper);
+    --surface-warm: var(
+        --color-sand-tint
+    ); /* raised warm fills: table
+		headers, inline code, pills */
+    --surface-warm-strong: var(--color-sand-tint-strong); /* Manifest band */
+
+    /* Content */
+    --content: var(--color-ink);
+    --content-muted: var(--color-gray-600);
+
+    /* Action */
+    --action: var(--color-coral);
+    --action-hover: var(--color-coral-bright);
+    --action-tint: var(--color-coral-tint); /* fills behind on-action text */
+    --on-action: var(--color-rust);
+
+    /* Warning */
+    --warning: var(--color-amber);
+    --warning-tint: var(--color-amber-tint);
+
+    /* Focus & borders */
+    --focus: var(--color-ocean);
+    --border-accent: var(--color-ocean); /* water-motif accents */
+    --border-subtle: var(--color-gray-200); /* tables, cards */
+    --border-divider: var(--color-ocean-hairline); /* section separators */
+
+    /* Reserved */
+    --solved: var(--color-island);
+}
+
+/* Expose the semantic roles as utilities, referencing the role variables so
+   overriding a role in :root propagates into every utility that uses it. */
+@theme inline {
+    --color-surface: var(--surface);
+    --color-surface-warm: var(--surface-warm);
+    --color-surface-warm-strong: var(--surface-warm-strong);
+
+    --color-content: var(--content);
+    --color-content-muted: var(--content-muted);
+
+    --color-action: var(--action);
+    --color-action-hover: var(--action-hover);
+    --color-action-tint: var(--action-tint);
+    --color-on-action: var(--on-action);
+
+    --color-warning: var(--warning);
+    --color-warning-tint: var(--warning-tint);
+
+    --color-focus: var(--focus);
+    --color-border-accent: var(--border-accent);
+    --color-border-subtle: var(--border-subtle);
+    --color-border-divider: var(--border-divider);
+
+    --color-solved: var(--solved);
+}
+
+/* Custom properties that don't need utilities. */
+:root {
+    --page-margin: 24px; /* page margin on mobile / content-column inset */
+}
+
+/* ---- Layer 3: bespoke components ---- */
+@layer components {
+    /* Manifest header's warm sand band: symmetric fades so it melts out of
+	   the white site-header and into the body with no hard edges. */
+    .page-header-sand {
+        background: linear-gradient(
+            to bottom,
+            rgba(250, 224, 183, 0) 0%,
+            var(--surface-warm-strong) 20px,
+            var(--surface-warm-strong) calc(100% - 20px),
+            rgba(250, 224, 183, 0) 100%
+        );
+    }
+}

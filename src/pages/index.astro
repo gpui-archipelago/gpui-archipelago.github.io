@@ -65,14 +65,14 @@ const problemSplit = [
         title="gpui-archipelago"
         meta="(aka GPUI-lago — “jee pyu ay la go”)"
     >
-        <blockquote>
+        <blockquote class="mt-6 border-l-2 border-border-accent pl-4">
             Every fork is an island. There’s no mainland and no one’s building
             one, so the islands have to find each other. Here they can.
         </blockquote>
     </PageHeader>
 
-    <section class="section">
-        <div class="container">
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
             <div class="prose">
                 <p>
                     Ideally, Zed would have published GPUI as a stable,
@@ -81,11 +81,14 @@ const problemSplit = [
                     different part of the problem:
                 </p>
             </div>
-            <ul class="fork-list">
+            <ul class="my-5 list-none space-y-5 p-0">
                 {
                     introForks.map((fork) => (
                         <li>
-                            <a class="fork-name" href={fork.url}>
+                            <a
+                                class="font-mono text-code font-semibold text-content no-underline hover:text-action"
+                                href={fork.url}
+                            >
                                 {fork.name}
                             </a>
                             — <span set:html={fork.description} />
@@ -103,9 +106,13 @@ const problemSplit = [
         </div>
     </section>
 
-    <section class="section">
-        <div class="container">
-            <h2>What this is</h2>
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                What this is
+            </h2>
             <div class="prose">
                 <p>
                     <strong
@@ -127,23 +134,44 @@ const problemSplit = [
         </div>
     </section>
 
-    <section id="forks" class="section">
-        <div class="container">
-            <h2>Forks at a glance</h2>
+    <section
+        id="forks"
+        class="section border-b border-border-divider last:border-b-0"
+    >
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                Forks at a glance
+            </h2>
             <ForksTable />
         </div>
     </section>
 
-    <section id="problems" class="section">
-        <div class="container">
-            <h2>Two kinds of problems</h2>
+    <section
+        id="problems"
+        class="section border-b border-border-divider last:border-b-0"
+    >
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                Two kinds of problems
+            </h2>
             <ProblemSplit problems={problemSplit} />
         </div>
     </section>
 
-    <section id="issues" class="section">
-        <div class="container">
-            <h2>How issues are structured</h2>
+    <section
+        id="issues"
+        class="section border-b border-border-divider last:border-b-0"
+    >
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                How issues are structured
+            </h2>
             <div class="prose">
                 <p>Each issue lives in <code>issues/</code>. The format:</p>
             </div>
@@ -151,15 +179,21 @@ const problemSplit = [
         </div>
     </section>
 
-    <section id="contribute" class="section">
-        <div class="container">
-            <h2>How to contribute</h2>
-            <ul class="contribute-list">
+    <section
+        id="contribute"
+        class="section border-b border-border-divider last:border-b-0"
+    >
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                How to contribute
+            </h2>
+            <ul class="m-0 list-disc space-y-3 pl-[1.4em]">
                 <li>
-                    <strong>Add an issue</strong> — open a PR with a new file in <code
-                        >issues/</code
-                    >. Partial drafts and LLM-generated text are fine, just keep
-                    it reasonable and concise.
+                    <strong>Add an issue</strong> — open a PR with a new file in
+                    <code>issues/</code>. Partial drafts and LLM-generated text
+                    are fine, just keep it reasonable and concise.
                 </li>
                 <li>
                     <strong>Add an approach</strong> — know how a fork handles an
@@ -170,68 +204,76 @@ const problemSplit = [
                     Open an issue or PR.
                 </li>
                 <li>
-                    <strong>Add your fork</strong> — see the <a href="#forks"
-                        >Forks table</a
-                    > above. Any fork is welcome, however immature.
+                    <strong>Add your fork</strong> — see the
+                    <a href="#forks">Forks table</a> above. Any fork is welcome, however
+                    immature.
                 </li>
                 <li>
-                    <strong>Add a project</strong> — the <a href="/manifest/"
-                        >Manifest</a
-                    >
-                    lists forks, apps, libraries, tooling, and learning material built
-                    on GPUI. It isn’t limited to crates.
+                    <strong>Add a project</strong> — the
+                    <a href="/manifest/">Manifest</a> lists forks, apps, libraries,
+                    tooling, and learning material built on GPUI. It isn’t limited
+                    to crates.
                 </li>
                 <li>
                     <strong>Share your experience</strong> — started a fork, abandoned
                     one, got burned and learned from it? Write it down here, or come
-                    tell us about it on <a href="https://discord.gg/bcuR88Z8ku"
-                        >Discord</a
-                    >.
+                    tell us about it on
+                    <a href="https://discord.gg/bcuR88Z8ku">Discord</a>.
                 </li>
             </ul>
         </div>
     </section>
 
-    <section class="section">
-        <div class="container">
-            <h2>Where this comes from</h2>
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                Where this comes from
+            </h2>
             <div class="prose">
                 <p>
-                    I started this <a href="https://github.com/gpui-archipelago"
-                        >repo</a
-                    > after trying not to fork, failing to use upstream as-is, and
-                    picking up a few things along the way. So yes, there’s a bias.
-                    Contributions from the other islands are what would keep this
-                    from being one person’s opinion.
+                    I started this
+                    <a href="https://github.com/gpui-archipelago">repo</a> after trying
+                    not to fork, failing to use upstream as-is, and picking up a few
+                    things along the way. So yes, there’s a bias. Contributions from
+                    the other islands are what would keep this from being one person’s
+                    opinion.
                 </p>
             </div>
         </div>
     </section>
 
-    <section class="section status-section">
-        <div class="container">
-            <h2>Status</h2>
-            <p class="status-line">Still extremely alpha.</p>
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                Status
+            </h2>
+            <p class="m-0">Still extremely alpha.</p>
         </div>
     </section>
 
     {
         latestNews && (
-            <section class="section news-section">
-                <div class="container">
-                    <h2>News</h2>
-                    <ul class="news-list">
+            <section class="section border-b border-border-divider last:border-b-0">
+                <div class="content">
+                    <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
+                        News
+                    </h2>
+                    <ul class="m-0 list-none space-y-5 p-0">
                         <li>
                             <a
-                                class="news-title"
+                                class="text-h3 font-medium text-content no-underline hover:text-action"
                                 href={`/news/${latestNews.id}/`}
                             >
                                 {latestNews.data.title}
                             </a>
-                            <span class="news-date">
+                            <span class="ml-2 font-mono text-small text-content-muted">
                                 {formatDate(latestNews.data.date)}
                             </span>
-                            <p>{latestNews.data.description}</p>
+                            <p class="mt-1">{latestNews.data.description}</p>
                         </li>
                     </ul>
                 </div>
@@ -239,120 +281,3 @@ const problemSplit = [
         )
     }
 </Layout>
-
-<style>
-    /* ---------- Page header (hero) ---------- */
-
-    .page-header blockquote {
-        margin: 24px 0 0;
-        padding-left: 16px;
-        border-left: 2px solid var(--ocean);
-    }
-
-    /* ---------- Sections ---------- */
-
-    .section {
-        border-bottom: 1px solid var(--ocean-hairline);
-    }
-
-    .section:last-of-type {
-        border-bottom: 0;
-    }
-
-    .section h2 {
-        margin: 0 0 var(--space-lg);
-        font-size: var(--type-h1);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.25;
-    }
-
-    /* ---------- Intro fork list ---------- */
-
-    .fork-list {
-        list-style: none;
-        margin: var(--space-md) 0;
-        padding: 0;
-    }
-
-    .fork-list li {
-        margin-bottom: var(--space-md);
-    }
-
-    .fork-list li:last-child {
-        margin-bottom: 0;
-    }
-
-    .fork-name {
-        font-family: var(--font-mono);
-        font-size: var(--type-code);
-        font-weight: 600;
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    .fork-name:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    /* ---------- Contribute ---------- */
-
-    .contribute-list {
-        margin: 0;
-        padding-left: 1.4em;
-    }
-
-    .contribute-list li {
-        margin-bottom: var(--space-sm);
-    }
-
-    .contribute-list li:last-child {
-        margin-bottom: 0;
-    }
-
-    /* ---------- Status ---------- */
-
-    .status-line {
-        margin: 0;
-    }
-
-    /* ---------- News ---------- */
-
-    .news-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .news-list li {
-        margin-bottom: var(--space-md);
-    }
-
-    .news-list li:last-child {
-        margin-bottom: 0;
-    }
-
-    .news-title {
-        font-size: var(--type-h3);
-        font-weight: 500;
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    .news-title:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    .news-date {
-        margin-left: 8px;
-        font-family: var(--font-mono);
-        font-size: var(--type-small);
-        color: var(--gray-600);
-    }
-
-    .news-list p {
-        margin: 4px 0 0;
-    }
-</style>

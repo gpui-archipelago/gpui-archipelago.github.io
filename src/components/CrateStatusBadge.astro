@@ -14,55 +14,27 @@ interface Props {
 
 const { status, href, footnote } = Astro.props;
 const meta = CRATE_STATUS_META[status];
+
+// Badge shape: 4px 10px padding, 4px radius — table-cell-sized, not a pill.
+const colors: Record<CrateStatus, string> = {
+    published: "bg-action-tint text-on-action",
+    unpublished: "bg-border-subtle text-content-muted",
+    pending: "bg-warning-tint text-warning",
+    outdated: "bg-warning-tint text-warning",
+};
+
+const badge = `inline-block whitespace-nowrap rounded-sm px-2.5 py-1 text-small font-medium ${colors[status]}`;
 ---
 
 {
     href ? (
-        <a class={`badge badge-${status}`} href={href}>
+        <a class={`${badge} hover:brightness-[1.08]`} href={href}>
             {meta.glyph} {meta.label}
-            {footnote && <sup class="footnote-mark">†</sup>}
+            {footnote && <sup class="ml-0.5 text-[11px]">†</sup>}
         </a>
     ) : (
-        <span class={`badge badge-${status}`}>
+        <span class={badge}>
             {meta.glyph} {meta.label}
         </span>
     )
 }
-
-<style>
-    /* Badge shape: 4px 10px padding, 4px radius — table-cell-sized, not a pill. */
-    .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: var(--radius-sm);
-        font-size: var(--type-small);
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    a.badge:hover {
-        text-decoration: none;
-        filter: brightness(1.08);
-    }
-
-    .badge-published {
-        background: var(--coral-tint);
-        color: var(--rust);
-    }
-
-    .badge-unpublished {
-        background: var(--gray-200);
-        color: var(--gray-600);
-    }
-
-    .badge-pending,
-    .badge-outdated {
-        background: var(--amber-tint);
-        color: var(--amber);
-    }
-
-    .footnote-mark {
-        font-size: 11px;
-        margin-left: 2px;
-    }
-</style>

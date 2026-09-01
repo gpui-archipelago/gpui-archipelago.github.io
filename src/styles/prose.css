@@ -1,34 +1,45 @@
 /* Prose typography (design system §2): paragraphs, headings, and lists inside
  * `.prose` containers — the home-page explainers and rendered news posts.
  * Tables inside prose are styled in table.css, which also owns the shared
- * hairline + sand-header treatment for every table on the site.
- */
+ * hairline + sand-header treatment for every table on the site. Lives in
+ * Tailwind's `components` layer so utilities can override it. */
 
-.prose p {
-    margin: 0 0 var(--space-md);
-}
+@layer components {
+    .prose p {
+        margin: 0 0 var(--spacing-md);
+    }
 
-.prose h2 {
-    margin: var(--space-xl) 0 16px;
-    font-size: var(--type-h1);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
-}
+    .prose h2 {
+        margin: var(--spacing-xl) 0 16px;
+        font-size: var(--text-h1);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+    }
 
-.prose h3 {
-    margin: var(--space-lg) 0 var(--space-sm);
-    font-size: var(--type-h3);
-    font-weight: 500;
-    line-height: 1.3;
-}
+    .prose h3 {
+        margin: var(--spacing-lg) 0 var(--spacing-sm);
+        font-size: var(--text-h3);
+        font-weight: 500;
+        line-height: 1.3;
+    }
 
-.prose ul,
-.prose ol {
-    margin: 0 0 24px;
-    padding-left: 1.4em;
-}
+    /* Tailwind's preflight removes list markers; restore them for prose. */
+    .prose ul {
+        list-style: disc;
+    }
 
-.prose li {
-    margin-bottom: var(--space-sm);
+    .prose ol {
+        list-style: decimal;
+    }
+
+    .prose ul,
+    .prose ol {
+        margin: 0 0 24px;
+        padding-left: 1.4em;
+    }
+
+    .prose li {
+        margin-bottom: var(--spacing-sm);
+    }
 }

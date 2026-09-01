@@ -20,20 +20,20 @@ const formatDate = (date: Date) =>
 
 <Layout title={post.data.title} description={post.data.description}>
     <PageHeader title={post.data.title} meta={formatDate(post.data.date)}>
-        <a href="/news/" slot="kicker">news</a>
+        <a
+            class="text-content-muted no-underline hover:text-action"
+            href="/news/"
+            slot="kicker">news</a
+        >
     </PageHeader>
 
-    <article class="prose">
-        <div class="container">
+    {
+        /* Prose typography and tables come from the shared stylesheets; the
+        article wrapper only adds vertical padding around the content. */
+    }
+    <article class="prose py-8">
+        <div class="content">
             <Content />
         </div>
     </article>
 </Layout>
-
-<style>
-    /* Prose typography and tables come from the shared stylesheets; the
-       article wrapper only adds vertical padding around the content. */
-    article.prose {
-        padding-block: var(--space-lg);
-    }
-</style>

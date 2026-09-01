@@ -22,26 +22,24 @@ const formatDate = (date: Date) =>
     />
 
     <section class="section">
-        <div class="container">
+        <div class="content">
             {
                 posts.length === 0 ? (
-                    <p class="empty">No posts yet.</p>
+                    <p class="m-0 text-content-muted">No posts yet.</p>
                 ) : (
-                    <ul class="post-list">
+                    <ul class="m-0 list-none p-0">
                         {posts.map((post) => (
-                            <li>
+                            <li class="mb-6 border-b border-border-subtle pb-6 last:mb-0 last:border-b-0 last:pb-0">
                                 <a
-                                    class="post-title"
+                                    class="text-h3 font-medium text-content no-underline hover:text-action"
                                     href={`/news/${post.id}/`}
                                 >
                                     {post.data.title}
                                 </a>
-                                <span class="post-date">
+                                <span class="ml-2 font-mono text-small text-content-muted">
                                     {formatDate(post.data.date)}
                                 </span>
-                                <p class="post-excerpt">
-                                    {post.data.description}
-                                </p>
+                                <p class="mt-1">{post.data.description}</p>
                             </li>
                         ))}
                     </ul>
@@ -50,51 +48,3 @@ const formatDate = (date: Date) =>
         </div>
     </section>
 </Layout>
-
-<style>
-    .empty {
-        margin: 0;
-        color: var(--gray-600);
-    }
-
-    .post-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .post-list li {
-        padding-bottom: 24px;
-        margin-bottom: 24px;
-        border-bottom: 1px solid var(--gray-200);
-    }
-
-    .post-list li:last-child {
-        padding-bottom: 0;
-        margin-bottom: 0;
-        border-bottom: 0;
-    }
-
-    .post-title {
-        font-size: var(--type-h3);
-        font-weight: 500;
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    .post-title:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    .post-date {
-        margin-left: 8px;
-        font-family: var(--font-mono);
-        font-size: var(--type-small);
-        color: var(--gray-600);
-    }
-
-    .post-excerpt {
-        margin: 4px 0 0;
-    }
-</style>

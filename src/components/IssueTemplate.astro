@@ -27,45 +27,20 @@ could adopt to stay compatible with each other.`;
 const html = template
     .split("\n")
     .map((line) => {
-        const cls = line.startsWith("#") ? "tmpl-head" : "tmpl-body";
+        const cls = line.startsWith("#")
+            ? "text-content font-semibold"
+            : "text-content-muted";
         return `<span class="${cls}">${line}\n</span>`;
     })
     .join("");
 ---
 
-<div class="issue-block">
-    <span class="block-label">issue template</span>
-    <pre class="issue-format"><code set:html={html} /></pre>
+<div>
+    <span class="mb-2 block text-small text-content-muted">issue template</span>
+    {
+        /* Flat warm wash (#FFF8ED) rather than a generic cool "code editor"
+        background. */
+    }
+    <pre
+        class="m-0 overflow-x-auto rounded-md border border-border-subtle bg-[#fff8ed] p-5 px-6 font-mono text-code leading-code"><code set:html={html} /></pre>
 </div>
-
-<style>
-    .block-label {
-        display: block;
-        margin-bottom: var(--space-xs);
-        font-size: var(--type-small);
-        color: var(--gray-600);
-    }
-
-    /* Flat warm wash (#FFF8ED), tied to the palette rather than a generic
-       cool "code editor" background. */
-    .issue-format {
-        margin: 0;
-        padding: 20px 24px;
-        background: #fff8ed;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
-        font-family: var(--font-mono);
-        font-size: var(--type-code);
-        line-height: var(--leading-code);
-        overflow-x: auto;
-    }
-
-    .tmpl-head {
-        color: var(--ink);
-        font-weight: 600;
-    }
-
-    .tmpl-body {
-        color: var(--gray-600);
-    }
-</style>
