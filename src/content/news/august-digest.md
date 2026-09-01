@@ -2,6 +2,7 @@
 title: "This Month in GPUI"
 date: 2026-08-31
 description: "A milestone month for the GPUI ecosystem: spring animations and framerate control upstream, standalone crates.io distributions, Kael 0.4, and web/JS bridges."
+tags: ["digest"]
 ---
 
 August marked a major milestone for the GPUI ecosystem. Between rapid foundational updates landing in upstream Zed and community initiatives delivering standalone distributions, pure `crates.io` packaging, web showcases, and dynamic scripting runtimes, building GPU-accelerated desktop and browser interfaces in Rust is advancing quickly.

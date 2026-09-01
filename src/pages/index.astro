@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import ForksTable from "../components/ForksTable.astro";
 import PageHeader from "../components/PageHeader.astro";
+import PostTags from "../components/PostTags.astro";
 import ProblemSplit from "../components/ProblemSplit.astro";
 import IssueTemplate from "../components/IssueTemplate.astro";
 import heroArt from "../assets/hero.webp";
@@ -286,6 +287,7 @@ const problemSplit = [
                             <span class="ml-2 font-mono text-small text-content-muted">
                                 {formatDate(latestNews.data.date)}
                             </span>
+                            <PostTags tags={latestNews.data.tags} />
                             <p class="mt-1">{latestNews.data.description}</p>
                         </li>
                     </ul>

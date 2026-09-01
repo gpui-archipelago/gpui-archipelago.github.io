@@ -1,0 +1,19 @@
+---
+// Small tag pills shown next to a post's date — distinguishes digests from
+// overview pieces in the news index, article headers, and the home teaser.
+interface Props {
+    tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+    tags.map((tag) => (
+        <span
+            class="ml-2 inline-block whitespace-nowrap rounded-sm border border-border-subtle px-2 py-0.5 align-middle font-mono text-small text-content-muted"
+        >
+            {tag}
+        </span>
+    ))
+}

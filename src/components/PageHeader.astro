@@ -4,15 +4,19 @@
 // "sand" variant paints the warm band used on the Manifest and home headers
 // (the gradient itself lives in global.css as .page-header-sand — a bespoke
 // treatment utilities would obscure).
+import PostTags from "./PostTags.astro";
+
 interface Props {
     title: string;
     kicker?: string;
     meta?: string;
     /** "sand" paints the warm band behind the Manifest and home headers' illustration. */
     variant?: "plain" | "sand";
+    /** Tag pills rendered after meta (e.g. "digest" vs "overview"). */
+    tags?: string[];
 }
 
-const { title, kicker, meta, variant = "plain" } = Astro.props;
+const { title, kicker, meta, tags, variant = "plain" } = Astro.props;
 const isSand = variant === "sand";
 const hasKicker = Boolean(kicker || Astro.slots.has("kicker"));
 ---
@@ -47,9 +51,10 @@ const hasKicker = Boolean(kicker || Astro.slots.has("kicker"));
                 {title}
             </h1>
             {
-                meta && (
+                (meta || (tags && tags.length > 0)) && (
                     <p class="mt-2 font-mono text-small text-content-muted">
                         {meta}
+                        {tags && <PostTags tags={tags} />}
                     </p>
                 )
             }
