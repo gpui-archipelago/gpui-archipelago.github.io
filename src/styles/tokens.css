@@ -1,0 +1,59 @@
+/* ---------------------------------------------------------------------------
+ * gpui-archipelago design tokens.
+ * Palette measured directly from the project mark (design system §1); type
+ * scale §2; spacing §5. Everything in the site should draw from these rather
+ * than inventing values per page.
+ * ------------------------------------------------------------------------- */
+
+:root {
+    /* ---- Color: measured from the mark ---- */
+    --ink: #174d68; /* body text, headings — the only color that passes AA on paper alone */
+    --coral: #ef4e28; /* the one accent: links, active states */
+    --coral-bright: #fd6f43; /* hover on coral elements only; never at rest */
+    --rust: #cb3b1b; /* text on coral-tinted backgrounds */
+    --ocean: #378fbd; /* section dividers, quiet backgrounds, water motif */
+    --island: #7dab59; /* reserved for the "solved" state — sparing use */
+    --sand: #fae0b7; /* warm neutral: code blocks, table headers */
+    --paper: #ffffff;
+    --amber: #a86214; /* "needs a maintainer" state */
+    --gray-600: #5b6368; /* secondary text, metadata, table headers */
+    --gray-200: #dde1e3; /* hairline borders, table rules */
+
+    /* ---- Tints: fills derived from the palette (never for text) ---- */
+    --coral-tint: rgba(239, 78, 40, 0.12);
+    --sand-tint: rgba(250, 224, 183, 0.4);
+    --sand-tint-strong: rgba(250, 224, 183, 0.5);
+    --amber-tint: rgba(168, 98, 20, 0.12);
+    --ocean-hairline: rgba(55, 143, 189, 0.35);
+
+    /* ---- Type (design system §2) ---- */
+    --font-sans: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+
+    /* Major-third scale (1.25), base 16px. Names follow the design system's
+       roles, not HTML heading levels. */
+    --type-display: 40px; /* page title only */
+    --type-h1: 32px; /* section headers */
+    --type-h2: 25px; /* subsection headers */
+    --type-h3: 20px; /* minor headers */
+    --type-body: 16px;
+    --type-small: 13px;
+    --type-code: 15px;
+
+    --leading-body: 1.6;
+    --leading-code: 1.5;
+
+    /* ---- Spacing (design system §5) ---- */
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 20px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+    --space-2xl: 64px;
+
+    /* ---- Layout ---- */
+    --measure: 72ch; /* prose line-length cap */
+    --page-margin: 24px; /* page margin on mobile / container inset */
+    --radius: 6px;
+    --radius-sm: 4px;
+}

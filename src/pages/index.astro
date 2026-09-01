@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ForksTable from "../components/ForksTable.astro";
+import PageHeader from "../components/PageHeader.astro";
+import ProblemSplit from "../components/ProblemSplit.astro";
+import IssueTemplate from "../components/IssueTemplate.astro";
 import { getCollection } from "astro:content";
 
 // Latest news post, shown as a teaser at the bottom of the page.
@@ -10,36 +13,6 @@ const latestNews = (await getCollection("news")).sort(
 
 const formatDate = (date: Date) =>
     date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-
-const issueFormat = `## The problem
-Written from the perspective of someone who just hit this wall.
-What did they try to do, and what went wrong?
-
-## Why it exists upstream
-A plain explanation of the Zed priorities or constraints behind
-the gap. Give context, don't assign blame.
-
-## How people currently solve it
-Known approaches: forks, crates, workarounds, conventions.
-For each one: what it solves, what it doesn't, who maintains it.
-
-## What nobody has solved yet
-The part that's still genuinely open.
-
-## Common ground opportunity
-Optional. A convention, interface, or spec that several forks
-could adopt to stay compatible with each other.`;
-
-// Lines starting with "#" are the template's structural markup; the rest is
-// guidance text. They get distinct colors in the block (4.3 of the design
-// system). Built as HTML here so the newlines survive into the <pre>.
-const issueFormatHtml = issueFormat
-    .split("\n")
-    .map((text) => {
-        const cls = text.startsWith("#") ? "tmpl-head" : "tmpl-body";
-        return `<span class="${cls}">${text}\n</span>`;
-    })
-    .join("");
 
 const introForks = [
     {
@@ -69,23 +42,34 @@ const introForks = [
             "a fork of gpui-ce that swaps the rendering/windowing backend for wgpu + winit. Unified code path across Windows, macOS, Linux, and WebAssembly. <code>WgpuSurface</code> lets you embed raw wgpu render passes (3D, game engines, custom shaders, anything) directly in your UI tree, making WGPUI suitable as a shell for 3D applications and mixed-mode interfaces.",
     },
 ];
+
+// Two-problem split (design system §4.4) — the content already provides these
+// definitions precisely; the component just lays them out side by side.
+const problemSplit = [
+    {
+        heading: "Ecosystem problems",
+        body: "Problems with how GPUI presents itself as a software project: distribution, stability, versioning, docs, guides for getting started at all. These are usually fixable without touching GPUI source code.",
+    },
+    {
+        heading: "Capability problems",
+        body: "Problems with what GPUI can do: missing elements, missing escape hatches, missing points where the API can be extended. These need code changes, and different forks may make those changes in incompatible ways. This is where a shared spec is useful.",
+    },
+];
 ---
 
 <Layout
     title="gpui-archipelago"
     description="A community-maintained space for anyone building with GPUI outside of Zed. Every fork is an island — there’s no mainland, so the islands have to find each other."
 >
-    <section class="hero">
-        <div class="container">
-            <h1>gpui-archipelago</h1>
-            <p class="aka">(aka GPUI-lago — “jee pyu ay la go”)</p>
-            <blockquote>
-                Every fork is an island. There’s no mainland and no one’s
-                building one, so the islands have to find each other. Here they
-                can.
-            </blockquote>
-        </div>
-    </section>
+    <PageHeader
+        title="gpui-archipelago"
+        meta="(aka GPUI-lago — “jee pyu ay la go”)"
+    >
+        <blockquote>
+            Every fork is an island. There’s no mainland and no one’s building
+            one, so the islands have to find each other. Here they can.
+        </blockquote>
+    </PageHeader>
 
     <section class="section">
         <div class="container">
@@ -153,27 +137,7 @@ const introForks = [
     <section id="problems" class="section">
         <div class="container">
             <h2>Two kinds of problems</h2>
-            <div class="problem-split">
-                <div class="problem">
-                    <h3>Ecosystem problems</h3>
-                    <p>
-                        Problems with how GPUI presents itself as a software
-                        project: distribution, stability, versioning, docs,
-                        guides for getting started at all. These are usually
-                        fixable without touching GPUI source code.
-                    </p>
-                </div>
-                <div class="problem">
-                    <h3>Capability problems</h3>
-                    <p>
-                        Problems with what GPUI can do: missing elements,
-                        missing escape hatches, missing points where the API can
-                        be extended. These need code changes, and different
-                        forks may make those changes in incompatible ways. This
-                        is where a shared spec is useful.
-                    </p>
-                </div>
-            </div>
+            <ProblemSplit problems={problemSplit} />
         </div>
     </section>
 
@@ -183,11 +147,7 @@ const introForks = [
             <div class="prose">
                 <p>Each issue lives in <code>issues/</code>. The format:</p>
             </div>
-            <div class="issue-block">
-                <span class="block-label">issue template</span>
-                <pre
-                    class="issue-format"><code set:html={issueFormatHtml} /></pre>
-            </div>
+            <IssueTemplate />
         </div>
     </section>
 
@@ -281,29 +241,9 @@ const introForks = [
 </Layout>
 
 <style>
-    /* ---------- Hero ---------- */
+    /* ---------- Page header (hero) ---------- */
 
-    .hero {
-        padding-block: 64px 32px;
-        border-bottom: 1px solid rgba(55, 143, 189, 0.35);
-    }
-
-    .hero h1 {
-        margin: 0;
-        font-size: 40px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-    }
-
-    .aka {
-        margin: 8px 0 0;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    .hero blockquote {
+    .page-header blockquote {
         margin: 24px 0 0;
         padding-left: 16px;
         border-left: 2px solid var(--ocean);
@@ -312,12 +252,69 @@ const introForks = [
     /* ---------- Sections ---------- */
 
     .section {
-        padding-block: 32px;
-        border-bottom: 1px solid rgba(55, 143, 189, 0.35);
+        border-bottom: 1px solid var(--ocean-hairline);
     }
 
     .section:last-of-type {
         border-bottom: 0;
+    }
+
+    .section h2 {
+        margin: 0 0 var(--space-lg);
+        font-size: var(--type-h1);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+    }
+
+    /* ---------- Intro fork list ---------- */
+
+    .fork-list {
+        list-style: none;
+        margin: var(--space-md) 0;
+        padding: 0;
+    }
+
+    .fork-list li {
+        margin-bottom: var(--space-md);
+    }
+
+    .fork-list li:last-child {
+        margin-bottom: 0;
+    }
+
+    .fork-name {
+        font-family: var(--font-mono);
+        font-size: var(--type-code);
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: none;
+    }
+
+    .fork-name:hover {
+        color: var(--coral);
+        text-decoration: none;
+    }
+
+    /* ---------- Contribute ---------- */
+
+    .contribute-list {
+        margin: 0;
+        padding-left: 1.4em;
+    }
+
+    .contribute-list li {
+        margin-bottom: var(--space-sm);
+    }
+
+    .contribute-list li:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ---------- Status ---------- */
+
+    .status-line {
+        margin: 0;
     }
 
     /* ---------- News ---------- */
@@ -329,7 +326,7 @@ const introForks = [
     }
 
     .news-list li {
-        margin-bottom: 20px;
+        margin-bottom: var(--space-md);
     }
 
     .news-list li:last-child {
@@ -337,7 +334,7 @@ const introForks = [
     }
 
     .news-title {
-        font-size: 20px;
+        font-size: var(--type-h3);
         font-weight: 500;
         color: var(--ink);
         text-decoration: none;
@@ -351,139 +348,11 @@ const introForks = [
     .news-date {
         margin-left: 8px;
         font-family: var(--font-mono);
-        font-size: 13px;
+        font-size: var(--type-small);
         color: var(--gray-600);
     }
 
     .news-list p {
         margin: 4px 0 0;
-    }
-
-    .section h2 {
-        margin: 0 0 32px;
-        font-size: 32px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.25;
-    }
-
-    [id] {
-        scroll-margin-top: 88px;
-    }
-
-    /* ---------- Prose ---------- */
-
-    .prose p {
-        margin: 0;
-    }
-
-    .prose p + p {
-        margin-top: 20px;
-    }
-
-    /* ---------- Intro fork list ---------- */
-
-    .fork-list {
-        list-style: none;
-        margin: 20px 0;
-        padding: 0;
-    }
-
-    .fork-list li {
-        margin-bottom: 20px;
-    }
-
-    .fork-list li:last-child {
-        margin-bottom: 0;
-    }
-
-    .fork-name {
-        font-family: var(--font-mono);
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--ink);
-        text-decoration: none;
-    }
-
-    .fork-name:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    /* ---------- Two-problem split (4.4) ---------- */
-
-    .problem-split {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 48px;
-    }
-
-    .problem h3 {
-        margin: 0 0 8px;
-        font-size: 20px;
-        font-weight: 500;
-        line-height: 1.3;
-    }
-
-    .problem p {
-        margin: 0;
-    }
-
-    @media (max-width: 40rem) {
-        .problem-split {
-            grid-template-columns: 1fr;
-            gap: 32px;
-        }
-    }
-
-    /* ---------- Issue template block (4.3) ---------- */
-
-    .block-label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    .issue-format {
-        margin: 0;
-        padding: 20px 24px;
-        background: #fff8ed;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
-        font-family: var(--font-mono);
-        font-size: 15px;
-        line-height: 1.5;
-        overflow-x: auto;
-    }
-
-    .tmpl-head {
-        color: var(--ink);
-        font-weight: 600;
-    }
-
-    .tmpl-body {
-        color: var(--gray-600);
-    }
-
-    /* ---------- Contribute ---------- */
-
-    .contribute-list {
-        margin: 0;
-        padding-left: 1.4em;
-    }
-
-    .contribute-list li {
-        margin-bottom: 12px;
-    }
-
-    .contribute-list li:last-child {
-        margin-bottom: 0;
-    }
-
-    /* ---------- Status ---------- */
-
-    .status-line {
-        margin: 0;
     }
 </style>

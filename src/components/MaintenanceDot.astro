@@ -1,0 +1,38 @@
+---
+// Maintenance signal (design system §4.1a) — a separate question from crate
+// publication. Rendered only where the source content states one; the absence
+// of a dot is itself the "no flagged concern" signal.
+import { MAINTENANCE_LABELS, type MaintenanceState } from "../data/fork-status";
+
+interface Props {
+    state: MaintenanceState;
+}
+
+const { state } = Astro.props;
+const label = MAINTENANCE_LABELS[state];
+---
+
+<span class={`maintenance-dot maintenance-${state}`} role="img" title={label}>
+    <span class="sr-only">{label}</span>
+</span>
+
+<style>
+    .maintenance-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-left: 6px;
+        border-radius: 50%;
+        vertical-align: 1px;
+    }
+
+    /* Amber is a non-text element here; it clears the 3:1 bar on paper
+       (4.75:1) as well as the 4.5:1 text bar (design system §1). */
+    .maintenance-needs-maintainer {
+        background: var(--amber);
+    }
+
+    .maintenance-finding-direction {
+        background: var(--gray-600);
+    }
+</style>

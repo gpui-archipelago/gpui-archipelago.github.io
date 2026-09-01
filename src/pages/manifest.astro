@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ManifestTable from "../components/ManifestTable.astro";
+import PageHeader from "../components/PageHeader.astro";
 import manifestArt from "../assets/manifest.webp";
 ---
 
@@ -8,24 +9,22 @@ import manifestArt from "../assets/manifest.webp";
     title="Manifest — gpui-archipelago"
     description="A community-maintained index of forks, apps, libraries, tooling, and learning material built downstream of the GPUI ecosystem."
 >
-    <div class="page-header">
-        <div class="container">
-            <img
-                class="header-art"
-                src={manifestArt.src}
-                width={manifestArt.width}
-                height={manifestArt.height}
-                alt=""
-                aria-hidden="true"
-                decoding="async"
-            />
-            <div class="header-copy">
-                <p class="kicker">manifest</p>
-                <h1>Manifest</h1>
-                <p class="meta">Projects shipped downstream of GPUI islands</p>
-            </div>
-        </div>
-    </div>
+    <PageHeader
+        kicker="manifest"
+        title="Manifest"
+        meta="Projects shipped downstream of GPUI islands"
+        variant="sand"
+    >
+        <img
+            class="header-art"
+            src={manifestArt.src}
+            width={manifestArt.width}
+            height={manifestArt.height}
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+        />
+    </PageHeader>
 
     <section class="section">
         <div class="container">
@@ -44,31 +43,11 @@ import manifestArt from "../assets/manifest.webp";
 </Layout>
 
 <style>
-    .page-header {
-        position: relative;
-        overflow: hidden;
-        padding-block: 48px 48px;
-        /* Symmetric fades: a thin sliver at the top melts the band out of the
-           white site-header above, a matching sliver at the bottom melts it
-           into the body. Both fades sit inside the 48px padding, so the copy
-           and art rest on equal solid sand on both sides — no hard edges. */
-        background: linear-gradient(
-            to bottom,
-            rgba(250, 224, 183, 0) 0%,
-            rgba(250, 224, 183, 0.5) 20px,
-            rgba(250, 224, 183, 0.5) calc(100% - 20px),
-            rgba(250, 224, 183, 0) 100%
-        );
-    }
-
     /* The illustration anchors to the content column: its right edge lines up
        with the content edge, inside the container's 24px inline padding. It
        stays fully visible (square, no crop); the radial vignette dissolves the
-       sky-blue box into the band so it reads as a soft shape, not a sticker. */
-    .page-header .container {
-        position: relative;
-    }
-
+       sky-blue box into the band so it reads as a soft shape, not a sticker.
+       The band itself and the copy clearance live in PageHeader (sand). */
     .header-art {
         position: absolute;
         top: 50%;
@@ -99,53 +78,9 @@ import manifestArt from "../assets/manifest.webp";
         );
     }
 
-    /* Copy sits directly on the band — no panel — and stays clear of the
-       illustration's corner at every width. */
-    .header-copy {
-        position: relative;
-        z-index: 2;
-        max-width: calc(100% - 12rem);
-    }
-
     @media (max-width: 40rem) {
         .header-art {
             opacity: 0.85;
         }
-
-        .header-copy {
-            max-width: calc(100% - 8.5rem);
-        }
-    }
-
-    .kicker {
-        margin: 0 0 12px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--gray-600);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    .page-header h1 {
-        margin: 0;
-        font-size: 40px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-    }
-
-    .meta {
-        margin: 8px 0 0;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    .section {
-        padding-block: 32px;
-    }
-
-    .prose p {
-        margin: 0 0 20px;
     }
 </style>

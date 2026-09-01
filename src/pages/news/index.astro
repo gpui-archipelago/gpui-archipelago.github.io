@@ -1,129 +1,100 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { getCollection } from "astro:content";
 
-const posts = (await getCollection('news')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+const posts = (await getCollection("news")).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 const formatDate = (date: Date) =>
-	date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 ---
 
 <Layout
-	title="News — gpui-archipelago"
-	description="Monthly digests of what’s happening across the GPUI ecosystem."
+    title="News — gpui-archipelago"
+    description="Monthly digests of what’s happening across the GPUI ecosystem."
 >
-	<div class="page-header">
-		<div class="container">
-			<p class="kicker">news</p>
-			<h1>News</h1>
-			<p class="meta">Monthly digests of the GPUI ecosystem.</p>
-		</div>
-	</div>
+    <PageHeader
+        kicker="news"
+        title="News"
+        meta="Monthly digests of the GPUI ecosystem."
+    />
 
-	<section class="section">
-		<div class="container">
-			{
-				posts.length === 0 ? (
-					<p class="empty">No posts yet.</p>
-				) : (
-					<ul class="post-list">
-						{
-							posts.map((post) => (
-								<li>
-									<a class="post-title" href={`/news/${post.id}/`}>
-										{post.data.title}
-									</a>
-									<span class="post-date">{formatDate(post.data.date)}</span>
-									<p class="post-excerpt">{post.data.description}</p>
-								</li>
-							))
-						}
-					</ul>
-				)
-			}
-		</div>
-	</section>
+    <section class="section">
+        <div class="container">
+            {
+                posts.length === 0 ? (
+                    <p class="empty">No posts yet.</p>
+                ) : (
+                    <ul class="post-list">
+                        {posts.map((post) => (
+                            <li>
+                                <a
+                                    class="post-title"
+                                    href={`/news/${post.id}/`}
+                                >
+                                    {post.data.title}
+                                </a>
+                                <span class="post-date">
+                                    {formatDate(post.data.date)}
+                                </span>
+                                <p class="post-excerpt">
+                                    {post.data.description}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
+        </div>
+    </section>
 </Layout>
 
 <style>
-	.page-header {
-		padding-block: 64px 32px;
-		border-bottom: 1px solid rgba(55, 143, 189, 0.35);
-	}
+    .empty {
+        margin: 0;
+        color: var(--gray-600);
+    }
 
-	.kicker {
-		margin: 0 0 12px;
-		font-family: var(--font-mono);
-		font-size: 13px;
-		color: var(--gray-600);
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-	}
+    .post-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
 
-	.page-header h1 {
-		margin: 0;
-		font-size: 40px;
-		font-weight: 600;
-		letter-spacing: -0.01em;
-		line-height: 1.2;
-	}
+    .post-list li {
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--gray-200);
+    }
 
-	.meta {
-		margin: 8px 0 0;
-		font-family: var(--font-mono);
-		font-size: 13px;
-		color: var(--gray-600);
-	}
+    .post-list li:last-child {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: 0;
+    }
 
-	.section {
-		padding-block: 32px;
-	}
+    .post-title {
+        font-size: var(--type-h3);
+        font-weight: 500;
+        color: var(--ink);
+        text-decoration: none;
+    }
 
-	.empty {
-		margin: 0;
-		color: var(--gray-600);
-	}
+    .post-title:hover {
+        color: var(--coral);
+        text-decoration: none;
+    }
 
-	.post-list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+    .post-date {
+        margin-left: 8px;
+        font-family: var(--font-mono);
+        font-size: var(--type-small);
+        color: var(--gray-600);
+    }
 
-	.post-list li {
-		padding-bottom: 24px;
-		margin-bottom: 24px;
-		border-bottom: 1px solid var(--gray-200);
-	}
-
-	.post-list li:last-child {
-		padding-bottom: 0;
-		margin-bottom: 0;
-		border-bottom: 0;
-	}
-
-	.post-title {
-		font-size: 20px;
-		font-weight: 500;
-		color: var(--ink);
-		text-decoration: none;
-	}
-
-	.post-title:hover {
-		color: var(--coral);
-		text-decoration: none;
-	}
-
-	.post-date {
-		margin-left: 8px;
-		font-family: var(--font-mono);
-		font-size: 13px;
-		color: var(--gray-600);
-	}
-
-	.post-excerpt {
-		margin: 4px 0 0;
-	}
+    .post-excerpt {
+        margin: 4px 0 0;
+    }
 </style>

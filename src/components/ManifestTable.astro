@@ -3,6 +3,8 @@
 // GPUI islands. Data lives in src/data/projects.json so "add a project" is a
 // one-file change; projects.schema.json validates it in the editor.
 import manifest from "../data/projects.json";
+import CrateStatusBadge from "./CrateStatusBadge.astro";
+import type { CrateStatus, MaintenanceState } from "../data/fork-status";
 
 interface Project {
     name: string;
@@ -14,16 +16,9 @@ interface Project {
     /** Fork-only: crate publish status, rendered as a badge when present. */
     crateStatus?: CrateStatus;
     crateUrl?: string;
+    /** Fork-only: maintenance signal (design system §4.1a). */
+    maintenance?: MaintenanceState;
 }
-
-type CrateStatus = "published" | "unpublished" | "pending" | "outdated";
-
-const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
-    published: { glyph: "●", label: "Published" },
-    unpublished: { glyph: "○", label: "Unpublished" },
-    pending: { glyph: "◐", label: "Pending" },
-    outdated: { glyph: "◑", label: "Outdated" },
-};
 
 const projects = manifest.projects as Project[];
 
@@ -208,38 +203,10 @@ const total = sorted.length;
                             />
                             {project.crateStatus && (
                                 <span class="badge-wrap">
-                                    {project.crateUrl ? (
-                                        <a
-                                            class={`badge badge-${project.crateStatus}`}
-                                            href={project.crateUrl}
-                                        >
-                                            {
-                                                crateStatusMeta[
-                                                    project.crateStatus
-                                                ].glyph
-                                            }{" "}
-                                            {
-                                                crateStatusMeta[
-                                                    project.crateStatus
-                                                ].label
-                                            }
-                                        </a>
-                                    ) : (
-                                        <span
-                                            class={`badge badge-${project.crateStatus}`}
-                                        >
-                                            {
-                                                crateStatusMeta[
-                                                    project.crateStatus
-                                                ].glyph
-                                            }{" "}
-                                            {
-                                                crateStatusMeta[
-                                                    project.crateStatus
-                                                ].label
-                                            }
-                                        </span>
-                                    )}
+                                    <CrateStatusBadge
+                                        status={project.crateStatus}
+                                        href={project.crateUrl}
+                                    />
                                 </span>
                             )}
                         </td>
@@ -328,7 +295,6 @@ const total = sorted.length;
     }
 
     .chip:focus-visible {
-        outline: 2px solid var(--ocean);
         outline-offset: 2px;
     }
 
@@ -355,43 +321,14 @@ const total = sorted.length;
     }
 
     /* ---------- Table ---------- */
+    /* Shared table chrome — hairlines, sand-tinted header, row hover, and the
+       mobile card stacking — lives in src/styles/table.css. Only the column
+       widths and cell contents differ here. */
 
-    .table-scroll {
-        overflow-x: auto;
-    }
-
+    /* Minimum width is a custom property read by the shared table.css base,
+       so the shared mobile reset (min-width: 0) can outrank it. */
     table {
-        width: 100%;
-        min-width: 36rem;
-        border-collapse: collapse;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
-        font-size: 15px;
-    }
-
-    thead th:first-child {
-        border-top-left-radius: 5px;
-    }
-
-    thead th:last-child {
-        border-top-right-radius: 5px;
-    }
-
-    tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 5px;
-    }
-
-    tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 5px;
-    }
-
-    th {
-        background: rgba(250, 224, 183, 0.4);
-        color: var(--gray-600);
-        font-size: 13px;
-        font-weight: 500;
-        text-align: left;
-        padding: 10px 16px;
+        --table-min-width: 36rem;
     }
 
     .col-project {
@@ -400,16 +337,6 @@ const total = sorted.length;
 
     .col-category {
         width: 15%;
-    }
-
-    td {
-        padding: 12px 16px;
-        border-top: 1px solid var(--gray-200);
-        vertical-align: middle;
-    }
-
-    tbody tr:first-child td {
-        border-top: 0;
     }
 
     .project-name {
@@ -435,7 +362,7 @@ const total = sorted.length;
         flex-shrink: 0;
         object-fit: cover;
         border: 1px solid var(--gray-200);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         background: var(--gray-200);
     }
 
@@ -470,93 +397,6 @@ const total = sorted.length;
     .badge-wrap {
         display: block;
         margin-top: 8px;
-    }
-
-    .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 13px;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    a.badge:hover {
-        text-decoration: none;
-        filter: brightness(1.08);
-    }
-
-    .badge-published {
-        background: rgba(239, 78, 40, 0.12);
-        color: var(--rust);
-    }
-
-    .badge-unpublished {
-        background: var(--gray-200);
-        color: var(--gray-600);
-    }
-
-    .badge-pending {
-        background: rgba(168, 98, 20, 0.12);
-        color: var(--amber);
-    }
-
-    .badge-outdated {
-        background: rgba(168, 98, 20, 0.12);
-        color: var(--amber);
-    }
-
-    .table-note {
-        margin: 12px 0 0;
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    /* Narrow screens: stack each row as a card, column name above each cell. */
-    @media (max-width: 40rem) {
-        .table-scroll {
-            overflow: visible;
-        }
-
-        table {
-            min-width: 0;
-            border: 0;
-        }
-
-        thead {
-            display: none;
-        }
-
-        tbody,
-        tr {
-            display: block;
-        }
-
-        tr {
-            margin: 0 0 16px;
-            padding: 0 16px 12px;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-        }
-
-        tr:last-child {
-            margin-bottom: 0;
-        }
-
-        td {
-            display: block;
-            border: 0;
-            padding: 12px 0 0;
-        }
-
-        td[data-label]::before {
-            content: attr(data-label);
-            display: block;
-            margin-bottom: 2px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray-600);
-        }
     }
 </style>
 

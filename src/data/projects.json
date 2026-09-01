@@ -581,7 +581,8 @@
       "stars": 925,
       "forks": 105,
       "crateStatus": "published",
-      "crateUrl": "https://crates.io/crates/gpui-ce"
+      "crateUrl": "https://crates.io/crates/gpui-ce",
+      "maintenance": "finding-direction"
     },
     {
       "name": "gpui-unofficial",
@@ -592,7 +593,8 @@
       "forks": 7,
       "crateStatus": "published",
       "crateUrl": "https://crates.io/crates/gpui-unofficial",
-      "tag": "upstream mirror"
+      "tag": "upstream mirror",
+      "maintenance": "needs-maintainer"
     },
     {
       "name": "WGPUI",

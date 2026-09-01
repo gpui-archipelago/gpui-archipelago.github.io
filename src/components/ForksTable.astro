@@ -4,8 +4,9 @@
 // Star/fork counts are manually maintained there too; consider fetching them
 // from the GitHub API at build time if you want them to stay current.
 import manifest from "../data/projects.json";
-
-type CrateStatus = "published" | "unpublished" | "pending" | "outdated";
+import CrateStatusBadge from "./CrateStatusBadge.astro";
+import MaintenanceDot from "./MaintenanceDot.astro";
+import type { MaintenanceState } from "../data/fork-status";
 
 interface Fork {
     name: string;
@@ -14,11 +15,13 @@ interface Fork {
     description: string;
     stars?: number;
     forks?: number;
-    crateStatus: CrateStatus;
+    crateStatus: "published" | "unpublished" | "pending" | "outdated";
     /** crates.io page for the crate, when one exists (badge becomes a link). */
     crateUrl?: string;
     /** Small label pill next to the name, e.g. "upstream mirror". */
     tag?: string;
+    /** Maintenance signal (design system §4.1a); absent = no flagged concern. */
+    maintenance?: MaintenanceState;
     /** Row carries a footnote marker (see the note under the table). */
     footnote?: boolean;
 }
@@ -26,13 +29,6 @@ interface Fork {
 const forks = (manifest.projects as Fork[]).filter(
     (fork) => fork.category === "Forks",
 );
-
-const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
-    published: { glyph: "●", label: "Published" },
-    unpublished: { glyph: "○", label: "Unpublished" },
-    pending: { glyph: "◐", label: "Pending" },
-    outdated: { glyph: "◑", label: "Outdated" },
-};
 ---
 
 <div class="table-scroll">
@@ -47,46 +43,34 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
         </thead>
         <tbody>
             {
-                forks.map((fork) => {
-                    const meta = crateStatusMeta[fork.crateStatus];
-                    return (
-                        <tr>
-                            <td data-label="Fork">
-                                <a class="fork-name" href={fork.url}>
-                                    {fork.name}
-                                </a>
-                                {fork.tag && (
-                                    <span class="fork-tag">{fork.tag}</span>
-                                )}
-                            </td>
-                            <td class="num" data-label="Stars">
-                                {fork.stars?.toLocaleString("en-US") ?? "—"}
-                            </td>
-                            <td class="num" data-label="Forks">
-                                {fork.forks?.toLocaleString("en-US") ?? "—"}
-                            </td>
-                            <td data-label="Crate">
-                                {fork.crateUrl ? (
-                                    <a
-                                        class={`badge badge-${fork.crateStatus}`}
-                                        href={fork.crateUrl}
-                                    >
-                                        {meta.glyph} {meta.label}
-                                        {fork.footnote && (
-                                            <sup class="footnote-mark">†</sup>
-                                        )}
-                                    </a>
-                                ) : (
-                                    <span
-                                        class={`badge badge-${fork.crateStatus}`}
-                                    >
-                                        {meta.glyph} {meta.label}
-                                    </span>
-                                )}
-                            </td>
-                        </tr>
-                    );
-                })
+                forks.map((fork) => (
+                    <tr>
+                        <td data-label="Fork">
+                            <a class="fork-name" href={fork.url}>
+                                {fork.name}
+                            </a>
+                            {fork.maintenance && (
+                                <MaintenanceDot state={fork.maintenance} />
+                            )}
+                            {fork.tag && (
+                                <span class="fork-tag">{fork.tag}</span>
+                            )}
+                        </td>
+                        <td class="num" data-label="Stars">
+                            {fork.stars?.toLocaleString("en-US") ?? "—"}
+                        </td>
+                        <td class="num" data-label="Forks">
+                            {fork.forks?.toLocaleString("en-US") ?? "—"}
+                        </td>
+                        <td data-label="Crate">
+                            <CrateStatusBadge
+                                status={fork.crateStatus}
+                                href={fork.crateUrl}
+                                footnote={fork.footnote}
+                            />
+                        </td>
+                    </tr>
+                ))
             }
         </tbody>
     </table>
@@ -103,183 +87,36 @@ const crateStatusMeta: Record<CrateStatus, { glyph: string; label: string }> = {
 </p>
 
 <style>
-    .table-scroll {
-        overflow-x: auto;
-    }
-
+    /* Minimum width is a custom property read by the shared table.css base,
+       so the shared mobile reset (min-width: 0) can outrank it. */
     table {
-        width: 100%;
-        min-width: 30rem;
-        border-collapse: collapse;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
-        font-size: 15px;
-    }
-
-    thead th:first-child {
-        border-top-left-radius: 5px;
-    }
-
-    thead th:last-child {
-        border-top-right-radius: 5px;
-    }
-
-    tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 5px;
-    }
-
-    tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 5px;
-    }
-
-    th {
-        background: rgba(250, 224, 183, 0.4);
-        color: var(--gray-600);
-        font-size: 13px;
-        font-weight: 500;
-        text-align: left;
-        padding: 10px 16px;
-    }
-
-    th.num {
-        text-align: right;
-    }
-
-    td {
-        padding: 12px 16px;
-        border-top: 1px solid var(--gray-200);
-        vertical-align: middle;
-    }
-
-    tbody tr:first-child td {
-        border-top: 0;
+        --table-min-width: 30rem;
     }
 
     .fork-name {
         font-family: var(--font-mono);
-        font-size: 15px;
+        font-size: var(--type-code);
         color: var(--ink);
         text-decoration: none;
     }
 
-    .fork-name:hover {
-        color: var(--coral);
-        text-decoration: none;
-    }
-
-    .footnote-mark {
-        font-size: 11px;
-        margin-left: 2px;
+    /* Row hover/focus deepens the name to rust — the comparison table's single
+       highest-weight interactive moment (design system §4.2); the sand
+       background shift is shared in table.css. */
+    tbody tr:hover .fork-name,
+    tbody tr:focus-within .fork-name {
+        color: var(--rust);
     }
 
     .fork-tag {
         display: inline-block;
         margin-left: 8px;
         padding: 1px 6px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         font-family: var(--font-mono);
         font-size: 11px;
         color: var(--gray-600);
-        background: rgba(250, 224, 183, 0.4);
+        background: var(--sand-tint);
         vertical-align: 1px;
-    }
-
-    td.num {
-        font-family: var(--font-mono);
-        color: var(--gray-600);
-        font-variant-numeric: tabular-nums;
-        text-align: right;
-    }
-
-    .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 13px;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    a.badge:hover {
-        text-decoration: none;
-        filter: brightness(1.08);
-    }
-
-    .badge-published {
-        background: rgba(239, 78, 40, 0.12);
-        color: var(--rust);
-    }
-
-    .badge-unpublished {
-        background: var(--gray-200);
-        color: var(--gray-600);
-    }
-
-    .badge-pending {
-        background: rgba(168, 98, 20, 0.12);
-        color: var(--amber);
-    }
-
-    .badge-outdated {
-        background: rgba(168, 98, 20, 0.12);
-        color: var(--amber);
-    }
-
-    .table-footnote,
-    .table-note {
-        margin: 12px 0 0;
-        font-size: 13px;
-        color: var(--gray-600);
-    }
-
-    /* Narrow screens: stack each row as a card, column name above each cell. */
-    @media (max-width: 40rem) {
-        .table-scroll {
-            overflow: visible;
-        }
-
-        table {
-            min-width: 0;
-            border: 0;
-        }
-
-        thead {
-            display: none;
-        }
-
-        tbody,
-        tr {
-            display: block;
-        }
-
-        tr {
-            margin: 0 0 16px;
-            padding: 0 16px 12px;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-        }
-
-        tr:last-child {
-            margin-bottom: 0;
-        }
-
-        td {
-            display: block;
-            border: 0;
-            padding: 12px 0 0;
-        }
-
-        td.num {
-            text-align: left;
-        }
-
-        td[data-label]::before {
-            content: attr(data-label);
-            display: block;
-            margin-bottom: 2px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray-600);
-        }
     }
 </style>

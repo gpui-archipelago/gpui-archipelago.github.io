@@ -1,0 +1,68 @@
+---
+// Crate publication badge (design system §4.1): colored AND labeled, so it
+// never depends on color perception alone. Shared by the forks-at-a-glance
+// table and the Manifest table.
+import { CRATE_STATUS_META, type CrateStatus } from "../data/fork-status";
+
+interface Props {
+    status: CrateStatus;
+    /** crates.io page, when one exists — makes the badge a link. */
+    href?: string;
+    /** Carries a footnote marker (see the note under the forks table). */
+    footnote?: boolean;
+}
+
+const { status, href, footnote } = Astro.props;
+const meta = CRATE_STATUS_META[status];
+---
+
+{
+    href ? (
+        <a class={`badge badge-${status}`} href={href}>
+            {meta.glyph} {meta.label}
+            {footnote && <sup class="footnote-mark">†</sup>}
+        </a>
+    ) : (
+        <span class={`badge badge-${status}`}>
+            {meta.glyph} {meta.label}
+        </span>
+    )
+}
+
+<style>
+    /* Badge shape: 4px 10px padding, 4px radius — table-cell-sized, not a pill. */
+    .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        font-size: var(--type-small);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    a.badge:hover {
+        text-decoration: none;
+        filter: brightness(1.08);
+    }
+
+    .badge-published {
+        background: var(--coral-tint);
+        color: var(--rust);
+    }
+
+    .badge-unpublished {
+        background: var(--gray-200);
+        color: var(--gray-600);
+    }
+
+    .badge-pending,
+    .badge-outdated {
+        background: var(--amber-tint);
+        color: var(--amber);
+    }
+
+    .footnote-mark {
+        font-size: 11px;
+        margin-left: 2px;
+    }
+</style>

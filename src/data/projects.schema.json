@@ -61,6 +61,11 @@
             "type": "string",
             "description": "Optional small label pill next to the name, e.g. \"upstream mirror\"."
           },
+          "maintenance": {
+            "type": "string",
+            "enum": ["needs-maintainer", "finding-direction"],
+            "description": "Maintenance signal (Forks category), set only where the source content states one; absence means no flagged concern."
+          },
           "footnote": {
             "type": "boolean",
             "description": "Shows a footnote marker in the forks at a glance table."

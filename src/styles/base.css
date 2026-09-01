@@ -1,0 +1,98 @@
+/* Element-level base: reset, page chrome, shared page furniture. */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    line-height: var(--leading-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Content column: the column centers itself in the viewport, the text within
+   it stays left-aligned (design system §5). */
+.container {
+    max-width: var(--measure);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+}
+
+/* Vertical rhythm for content sections (design system §5). */
+.section {
+    padding-block: var(--space-lg);
+}
+
+a {
+    color: var(--coral);
+}
+
+a:hover {
+    color: var(--coral-bright);
+}
+
+b,
+strong {
+    font-weight: 600;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: var(--type-code);
+    line-height: var(--leading-code);
+    background: var(--sand-tint);
+    padding: 0.08em 0.35em;
+    border-radius: var(--radius-sm);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+}
+
+::selection {
+    background: rgba(239, 78, 40, 0.18);
+}
+
+/* Anchored sections sit clear of the sticky header. */
+[id] {
+    scroll-margin-top: 88px;
+}
+
+/* One focus treatment everywhere. */
+:focus-visible {
+    outline: 2px solid var(--ocean);
+    outline-offset: 2px;
+}
+
+/* Visually hidden, present for screen readers. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

@@ -1,6 +1,10 @@
 ---
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/tokens.css";
+import "../styles/base.css";
+import "../styles/table.css";
+import "../styles/prose.css";
 
 interface Props {
     title?: string;
@@ -36,91 +40,3 @@ const {
         <SiteFooter />
     </body>
 </html>
-
-<style is:global>
-    :root {
-        /* Palette measured from the project mark — see the design system. */
-        --ink: #174d68; /* body text, headings (9.1:1 on paper) */
-        --coral: #ef4e28; /* the one accent: links, active states */
-        --coral-bright: #fd6f43; /* hover on coral elements only */
-        --rust: #cb3b1b; /* text on coral-tinted backgrounds */
-        --ocean: #378fbd; /* section dividers, quiet backgrounds, water motif */
-        --island: #7dab59; /* reserved for the "solved" state */
-        --sand: #fae0b7; /* warm neutral: code blocks, table headers */
-        --paper: #ffffff;
-        --amber: #a86214; /* "needs a maintainer" state */
-        --gray-600: #5b6368; /* secondary text, metadata */
-        --gray-200: #dde1e3; /* hairline borders, table rules */
-
-        --font-sans: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;
-        --font-mono:
-            "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
-
-        --radius: 6px;
-        --container: 72ch;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    html {
-        color-scheme: light;
-        scroll-behavior: smooth;
-    }
-
-    body {
-        margin: 0;
-        background: var(--paper);
-        color: var(--ink);
-        font-family: var(--font-sans);
-        font-size: 16px;
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-    }
-
-    .container {
-        max-width: var(--container);
-        margin-inline: auto;
-        padding-inline: 24px;
-    }
-
-    a {
-        color: var(--coral);
-    }
-
-    a:hover {
-        color: var(--coral-bright);
-    }
-
-    b,
-    strong {
-        font-weight: 600;
-    }
-
-    code {
-        font-family: var(--font-mono);
-        font-size: 15px;
-        line-height: 1.5;
-        background: rgba(250, 224, 183, 0.4);
-        padding: 0.08em 0.35em;
-        border-radius: 4px;
-    }
-
-    pre code {
-        background: none;
-        padding: 0;
-        font-size: inherit;
-    }
-
-    ::selection {
-        background: rgba(239, 78, 40, 0.18);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        html {
-            scroll-behavior: auto;
-        }
-    }
-</style>

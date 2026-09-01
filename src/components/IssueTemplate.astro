@@ -1,0 +1,71 @@
+---
+// Issue-template block (design system §4.3): a literal template someone will
+// copy, so it's a distinct, labeled, warm-toned component — not a generic
+// syntax-highlighted code block.
+const template = `## The problem
+Written from the perspective of someone who just hit this wall.
+What did they try to do, and what went wrong?
+
+## Why it exists upstream
+A plain explanation of the Zed priorities or constraints behind
+the gap. Give context, don't assign blame.
+
+## How people currently solve it
+Known approaches: forks, crates, workarounds, conventions.
+For each one: what it solves, what it doesn't, who maintains it.
+
+## What nobody has solved yet
+The part that's still genuinely open.
+
+## Common ground opportunity
+Optional. A convention, interface, or spec that several forks
+could adopt to stay compatible with each other.`;
+
+// Lines starting with "#" are the template's structural markup; the rest is
+// guidance text. They get distinct colors (see §4.3). Built as HTML here so
+// the newlines survive into the <pre>.
+const html = template
+    .split("\n")
+    .map((line) => {
+        const cls = line.startsWith("#") ? "tmpl-head" : "tmpl-body";
+        return `<span class="${cls}">${line}\n</span>`;
+    })
+    .join("");
+---
+
+<div class="issue-block">
+    <span class="block-label">issue template</span>
+    <pre class="issue-format"><code set:html={html} /></pre>
+</div>
+
+<style>
+    .block-label {
+        display: block;
+        margin-bottom: var(--space-xs);
+        font-size: var(--type-small);
+        color: var(--gray-600);
+    }
+
+    /* Flat warm wash (#FFF8ED), tied to the palette rather than a generic
+       cool "code editor" background. */
+    .issue-format {
+        margin: 0;
+        padding: 20px 24px;
+        background: #fff8ed;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-family: var(--font-mono);
+        font-size: var(--type-code);
+        line-height: var(--leading-code);
+        overflow-x: auto;
+    }
+
+    .tmpl-head {
+        color: var(--ink);
+        font-weight: 600;
+    }
+
+    .tmpl-body {
+        color: var(--gray-600);
+    }
+</style>
