@@ -1,14 +1,14 @@
 ---
 // Page header: kicker + display title + meta, plus optional slot content (the
-// home hero's blockquote, the Manifest's illustration). The "sand" variant
-// paints the warm band used on the Manifest page (the gradient itself lives
-// in global.css as .page-header-sand — a bespoke treatment utilities would
-// obscure).
+// home hero's blockquote and illustration, the Manifest's illustration). The
+// "sand" variant paints the warm band used on the Manifest and home headers
+// (the gradient itself lives in global.css as .page-header-sand — a bespoke
+// treatment utilities would obscure).
 interface Props {
     title: string;
     kicker?: string;
     meta?: string;
-    /** "sand" paints the Manifest header's warm band. */
+    /** "sand" paints the warm band behind the Manifest and home headers' illustration. */
     variant?: "plain" | "sand";
 }
 
@@ -17,12 +17,15 @@ const isSand = variant === "sand";
 const hasKicker = Boolean(kicker || Astro.slots.has("kicker"));
 ---
 
+{
+    /* z-0 on the sand header: contains the copy/art z-indexes in one stacking
+    context below the sticky nav's z-10, so header text never paints over
+    the nav bar while scrolling. */
+}
 <header
-    class={`border-b border-border-divider ${
-        isSand
-            ? "page-header-sand relative overflow-hidden py-12"
-            : "pt-16 pb-8"
-    }`}
+    class={isSand
+        ? "page-header-sand relative z-0 overflow-hidden py-12"
+        : "pt-16 pb-8"}
 >
     <div class={`content ${isSand ? "relative" : ""}`}>
         {/* The copy clears the illustration's corner on the sand variant. */}

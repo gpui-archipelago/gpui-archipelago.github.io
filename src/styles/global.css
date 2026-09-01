@@ -137,8 +137,8 @@
 
 /* ---- Layer 3: bespoke components ---- */
 @layer components {
-    /* Manifest header's warm sand band: symmetric fades so it melts out of
-	   the white site-header and into the body with no hard edges. */
+    /* Manifest and home headers' warm sand band: symmetric fades so it melts
+	   out of the white site-header and into the body with no hard edges. */
     .page-header-sand {
         background: linear-gradient(
             to bottom,

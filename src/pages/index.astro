@@ -4,6 +4,7 @@ import ForksTable from "../components/ForksTable.astro";
 import PageHeader from "../components/PageHeader.astro";
 import ProblemSplit from "../components/ProblemSplit.astro";
 import IssueTemplate from "../components/IssueTemplate.astro";
+import heroArt from "../assets/hero.webp";
 import { getCollection } from "astro:content";
 
 // Latest news post, shown as a teaser at the bottom of the page.
@@ -64,11 +65,23 @@ const problemSplit = [
     <PageHeader
         title="gpui-archipelago"
         meta="(aka GPUI-lago — “jee pyu ay la go”)"
+        variant="sand"
     >
-        <blockquote class="mt-6 border-l-2 border-border-accent pl-4">
+        <blockquote
+            class="relative z-10 mt-6 max-w-[calc(100%-12rem)] border-l-2 border-border-accent pl-4 max-sm:max-w-[calc(100%-8.5rem)]"
+        >
             Every fork is an island. There’s no mainland and no one’s building
             one, so the islands have to find each other. Here they can.
         </blockquote>
+        <img
+            class="header-art"
+            src={heroArt.src}
+            width={heroArt.width}
+            height={heroArt.height}
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+        />
     </PageHeader>
 
     <section class="section border-b border-border-divider last:border-b-0">
@@ -281,3 +294,46 @@ const problemSplit = [
         )
     }
 </Layout>
+
+<style>
+    /* The illustration anchors to the content column: its right edge lines up
+       with the content edge, inside the container's 24px inline padding. It
+       stays fully visible (square, no crop); the radial vignette dissolves the
+       sky-blue box into the band so it reads as a soft shape, not a sticker.
+       The band itself and the copy clearance live in PageHeader (sand). */
+    .header-art {
+        position: absolute;
+        top: 50%;
+        right: 24px;
+        transform: translateY(-50%);
+        /* Fixed square sized to always fit inside the content column's height
+           (the meta always wraps to ≥2 lines, making the container ≥ ~126px),
+           so the art never sticks out past the container's top or bottom edge
+           and the centering stays symmetric. */
+        width: 8rem;
+        height: 8rem;
+        object-fit: cover;
+        opacity: 0.9;
+        z-index: 0;
+        /* Radial vignette: the fade starts earlier (40%) so it dissolves over
+           a longer span and no ellipse ring is visible, and the center is
+           biased slightly down so the sand stays visible deeper (tying into
+           the band's lower edge) while the sky fades away at the top. */
+        -webkit-mask-image: radial-gradient(
+            ellipse 70% 70% at 50% 55%,
+            black 40%,
+            transparent 100%
+        );
+        mask-image: radial-gradient(
+            ellipse 70% 70% at 50% 55%,
+            black 40%,
+            transparent 100%
+        );
+    }
+
+    @media (max-width: 40rem) {
+        .header-art {
+            opacity: 0.85;
+        }
+    }
+</style>

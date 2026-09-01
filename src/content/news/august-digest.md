@@ -1,5 +1,5 @@
 ---
-title: "This Month in GPUI — August Digest"
+title: "This Month in GPUI"
 date: 2026-08-31
 description: "A milestone month for the GPUI ecosystem: spring animations and framerate control upstream, standalone crates.io distributions, Kael 0.4, and web/JS bridges."
 ---
