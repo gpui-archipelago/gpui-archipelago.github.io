@@ -27,6 +27,12 @@ Right now, developers deal with this in a few distinct ways:
 - **Living on raw Git:** Pointing directly to Git repositories skips release overhead, but it quickly falls apart when dependencies drift and you end up with multiple incompatible GPUI instances compiled into your binary.
 - **Shared patch sets:** There is an idea around passing modular patches between forks rather than maintaining whole separate codebases. As [Nate Butler](https://github.com/iamnbutler) has pointed out, though, if you genuinely want to take the engine in a new direction, a clean fork is usually the only practical path. Trying to keep patches portable across diverging codebases requires more cross-team coordination than most small projects can sustain.
 
+## Why Not Just Make It Official?
+
+There is an obvious fix staring everyone in the face: make the unofficial crate official. [gpui-unofficial](https://crates.io/crates/gpui-unofficial) fills the exact gap Zed left behind, yet it struggles with community adoption precisely because of its unofficialness — teams hesitate to build on a package that might change names or ownership again. If the official `gpui` crate on crates.io were current, the stale-crate problem, the piles of git url + rev combinations, and the mirror's adoption ceiling would all dissolve at once.
+
+But official is a promise, not a rename. It drags in governance, official release notes, a versioning policy, and SemVer guarantees — sustained work the Zed team doesn't have bandwidth for. So nothing gets blessed, and the ecosystem settles into its current shape: one stale official crate, several published and unpublished fork crates, and everyone else pointing Cargo at arbitrary git commits.
+
 ## Where the Archipelago Fits
 
 That is where something like [gpui-archipelago](https://github.com/gpui-archipelago) fits. It should not try to be another competing fork, nor should it try to force everyone onto a single standard. People are going to fork the engine for their own specific needs, and that is completely natural.

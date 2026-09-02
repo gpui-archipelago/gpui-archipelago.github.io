@@ -566,7 +566,7 @@
       "category": "Forks",
       "url": "https://github.com/zed-industries/zed",
       "image": "https://raw.githubusercontent.com/zed-industries/zed/main/crates/zed/resources/app-icon.png",
-      "description": "A high-performance, multiplayer code editor — and the upstream home of GPUI. Everything else on this list ships downstream of this repo.",
+      "description": "A high-performance, multiplayer code editor — and the upstream home of GPUI. Everything else on this list ships downstream of this repo. GPUI is not discontinued — the team simply has a lot on its plate, so upstream PRs get in slower than some would like.",
       "stars": 88000,
       "forks": 10000,
       "crateStatus": "outdated",
@@ -577,7 +577,7 @@
       "name": "gpui-ce",
       "category": "Forks",
       "url": "https://github.com/gpui-ce/gpui-ce",
-      "description": "A semi-official community fork aimed at governance, publishing crates for standalone desktop apps while still working out where it's headed.",
+      "description": "A community fork making an effort to accelerate testing of upstream features and maintain a faster-moving community version — publishing crates for standalone desktop apps.",
       "stars": 925,
       "forks": 105,
       "crateStatus": "published",
@@ -600,7 +600,7 @@
       "name": "WGPUI",
       "category": "Forks",
       "url": "https://github.com/Far-Beyond-Pulsar/WGPUI",
-      "description": "A fork of gpui-ce that swaps the rendering/windowing backend for wgpu + winit — a unified code path across Windows, macOS, Linux, and WebAssembly.",
+      "description": "GPUI essentially ported to a single cross-platform backend instead of per-platform code — leaner and easier to extend across Windows, macOS, Linux, and WebAssembly at once. An experimental migration to properly retained, composited rendering is underway for efficiency.",
       "stars": 64,
       "forks": 12,
       "crateStatus": "unpublished"
@@ -772,10 +772,22 @@
     },
     {
       "name": "rhythm-gpui",
-      "category": "Libraries",
-      "url": "https://github.com/P233/rhythm-gpui",
-      "description": "Print-inspired vertical rhythm for GPUI, with baseline offsets computed from real font metrics."
-    },
+            "category": "Libraries",
+            "url": "https://github.com/P233/rhythm-gpui",
+            "description": "Print-inspired vertical rhythm for GPUI, with baseline offsets computed from real font metrics."
+          },
+          {
+            "name": "WGPUI-Component",
+            "category": "Libraries",
+            "url": "https://github.com/Far-Beyond-Pulsar/WGPUI-Component",
+            "description": "The [gpui-component](https://github.com/longbridge/gpui-component) component suite maintained against WGPUI — UI components for building desktop applications."
+          },
+          {
+            "name": "WGPUI-Motion",
+            "category": "Libraries",
+            "url": "https://github.com/Far-Beyond-Pulsar/WGPUI-Motion",
+            "description": "WGPUI's own state-driven animation library — declarative, composable motion for expressive UIs."
+          },
     {
       "name": "create-gpui-app",
       "category": "Tooling",
