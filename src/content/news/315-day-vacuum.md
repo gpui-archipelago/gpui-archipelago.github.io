@@ -17,7 +17,7 @@ To outside observers, it looked like an author forced into an emergency workarou
 
 The crates.io publishing wall was never a sudden surprise. Because Cargo strictly forbids publishing any crate with `git` or `path` dependencies, anyone building an open-source library on top of Zed's unreleased Git commits is barred from crates.io.
 
-The community had already solved this months earlier. Nate Butler (`iamnbutler`), an early Zed employee, and contributors like `Vanuan` had set up **[gpui-unofficial](https://github.com/iamnbutler/gpui-unofficial)**—an open mirror whose sole reason for existence was to republish Zed's code to crates.io so library authors could publish without waiting on Zed.
+The community had already solved this months earlier. Nate Butler (`iamnbutler`), an early Zed employee had set up **[gpui-unofficial](https://github.com/iamnbutler/gpui-unofficial)**, an open mirror whose sole reason for existence was to republish Zed's code to crates.io so library authors could publish without waiting on Zed.
 
 In April 2026, community members opened **Issue #2234** on `gpui-component`, asking to lock against `gpui-unofficial` to enable crates.io releases. Jason closed it as "not planned" within hours, writing:
 
@@ -66,7 +66,7 @@ To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit
     <tr>
       		<td data-label="Distribution Track"><strong><a href="https://crates.io/crates/gpui-unofficial"><code>gpui-unofficial</code></a></strong></td>
       <td data-label="Versioning &amp; Upstream Tracking">Republishes upstream Zed release tags directly to crates.io</td>
-      <td data-label="Primary Steward">Nate Butler, Vanuan</td>
+      <td data-label="Primary Steward">Nate Butler</td>
       <td data-label="Architecture / Philosophy">Minimal, transparent crates.io passthrough to unblock publishing.</td>
       <td data-label="Downstream Crates"><code>gpuikit</code> (Nate Butler's toolkit), Longbridge's GPUI Kit retargeted for unofficial mirrors (<code>gpui-component-uo</code>, <code>gpui-base-uo</code>)</td>
     </tr>
