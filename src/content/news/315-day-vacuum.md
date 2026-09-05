@@ -5,7 +5,7 @@ description: "After 315 days without a crates.io release, Longbridge's Jason Lee
 tags: ["dispatch"]
 ---
 
-On September 2, 2026, the simmering friction that has defined building with GPUI outside of Zed broke into the open.
+On September 2, 2026, tired of drifting outside Zed’s closed harbor, one of the ecosystem’s largest ships dropped anchor and claimed an island of its own.
 
 Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](https://github.com/longbridge/gpui-component) library backed by Longbridge, posted an exasperated public callout to the Zed team: 315 days had passed since the last official GPUI release to crates.io, with 523 commits piled up on upstream `main`. Hours later, tired of waiting on an unblocked upstream release train, he cut the knot himself: republishing a snapshot of Zed's GPUI crates under a renamed **`gpui-pre-*`** family.
 
