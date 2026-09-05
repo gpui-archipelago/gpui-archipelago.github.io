@@ -7,7 +7,7 @@ tags: ["dispatch"]
 
 On September 2, 2026, tired of drifting outside Zed’s closed harbor, one of the ecosystem’s largest ships dropped anchor and claimed an island of its own.
 
-Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](https://github.com/longbridge/gpui-component) library backed by Longbridge, posted an exasperated public callout to the Zed team: 315 days had passed since the last official GPUI release to crates.io, with 523 commits piled up on upstream `main`. Hours later, tired of waiting on an unblocked upstream release train, he cut the knot himself: republishing a snapshot of Zed's GPUI crates under a renamed **`gpui-pre-*`** family.
+Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](https://github.com/longbridge/gpui-component) library backed by Longbridge, posted an exasperated public callout to the Zed team: 315 days had passed since the last official GPUI release to crates.io, with 523 commits piled up on upstream `main`. After 24 hour ultimatum expired, unwilling to wait a month for an official release pipeline, he acted alone: republishing a snapshot of Zed’s GPUI crates under a renamed gpui-pre-* family.
 
 With those crates on crates.io, he unveiled a comprehensive restructuring under the **GPUI Kit** umbrella. The project introduced **[gpui-kit](https://crates.io/crates/gpui-kit)** as a unified facade crate that re-exports GPUI's core APIs alongside its own ecosystem layers: unstyled behavior and infra in **`gpui-base`**, styled widgets in **`gpui-component`**, and a dynamic scripting layer in **`gpui-shell`**—a runtime aimed at quick, compiler-free UI prototyping reminiscent of Qt QML.
 
