@@ -17,7 +17,7 @@ To outside observers, it looked like an author forced into an emergency workarou
 
 The crates.io publishing wall was never a sudden surprise. Because Cargo strictly forbids publishing any crate with `git` or `path` dependencies, anyone building an open-source library on top of Zed's unreleased Git commits is barred from crates.io.
 
-The community had already solved this months earlier. Nate Butler (`iamnbutler`), an early Zed employee had set up **[gpui-unofficial](https://github.com/iamnbutler/gpui-unofficial)**, an open mirror whose sole reason for existence was to republish Zed's code to crates.io so library authors could publish without waiting on Zed.
+The community had already solved this months earlier. Nate Butler (`iamnbutler`), an early Zed employee, had set up **[gpui-unofficial](https://github.com/iamnbutler/gpui-unofficial)**, an open mirror whose sole reason for existence was to republish Zed's code to crates.io so library authors could publish without waiting on Zed.
 
 In April 2026, community members opened **Issue #2234** on `gpui-component`, asking to lock against `gpui-unofficial` to enable crates.io releases. Jason closed it as "not planned" within hours, writing:
 
@@ -27,11 +27,11 @@ In April 2026, community members opened **Issue #2234** on `gpui-component`, ask
 
 In May 2026, contributor `Vanuan` submitted **PR #2404** implementing the switch to `gpui-unofficial`. Jason closed it unmerged with a single word: *"No!"*
 
-When contributors pointed out that `gpui-unofficial` was not an unvetted community hard-fork like `gpui-ce`, but a literal packaging of Zed's exact upstream code designed solely to bypass Cargo's registry constraints, the conversation stalled. For months, `gpui-component` remained anchored to raw Git, unpublishable on crates.io, while its maintainer insisted that third-party stopgaps were unnecessary distractions.
+When contributors pointed out that `gpui-unofficial` was not a community hard-fork like `gpui-ce`, but a literal packaging of Zed's exact upstream code designed solely to bypass Cargo's registry constraints, the conversation stalled. For months, `gpui-component` remained anchored to raw Git, unpublishable on crates.io, while its maintainer insisted that third-party stopgaps were unnecessary distractions.
 
-## The Irony—and Opacity—of `gpui-pre`
+## The Irony and Opacity of `gpui-pre`
 
-The flashpoint in September was therefore not caused by a lack of solutions, but by a refusal of shared solutions.
+The public stance in September was therefore not caused by a lack of solutions, but by a refusal of shared solutions.
 
 When Zed failed to publish an official 0.3.0 release within 24 hours of Jason's tweet, he didn't turn to the existing community mirror he had spent months dismissing. Instead, he republished the crates himself under a new namespace: **[gpui-pre](https://crates.io/crates/gpui-pre)**.
 
@@ -39,7 +39,7 @@ While Jason claimed on X that it is "just a crates release CI" that keeps up wit
 
 The rationale that dismissed community mirrors as unvalidated middlemen that "create problems without fixing them" vanished the moment the republished crate belonged to Longbridge.
 
-To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit` collided directly with Nate Butler's existing **`gpuikit`** repository—an opinionated UI toolkit that has been in active development since the GPUI 2 rewrite—sparking immediate friction over project naming across community forums.
+To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit` collided directly with Nate Butler's existing **`gpuikit`** repository (an opinionated UI toolkit that has been in active development since the GPUI 2 rewrite) sparking immediate friction over project naming across community forums.
 
 ## The Real-World Breakdown
 
@@ -101,7 +101,7 @@ The standoff over `gpui-pre` illustrates the fundamental tragedy of uncoordinate
 
 When an upstream maintainer treats a foundational engine as an internal implementation detail, a power vacuum forms. In that vacuum, technical decisions are rarely made on technical merits alone. Interpersonal friction, "Not Invented Here" syndrome, and corporate posturing over whose needs are "real-world" take precedence over shared infrastructure.
 
-Meanwhile, downstream users adapt with whatever shims work: when Longbridge refused to support community forks, the community simply cloned and retargeted Longbridge's component code to run across both `gpui-unofficial` (`-uo`) and `gpui-ce` (`gpui_ce_components*`).
+Meanwhile, downstream users adapt with whatever shims work: when Longbridge refused to support community forks, the community simply cloned and retargeted Longbridge's component code to run across both `gpui-unofficial` (`gpui-component-uo`) and `gpui-ce` (`gpui_ce_components*`).
 
 As Chinese community member `cosoc` dryly summarized on the closed PR:
 
