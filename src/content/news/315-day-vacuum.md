@@ -13,7 +13,7 @@ With those crates on crates.io, he unveiled a comprehensive restructuring under 
 
 To outside observers, it looked like an author forced into an emergency workaround by upstream neglect. But across the GPUI community—and throughout the tracking threads documented on the *gpui-archipelago* project—the reaction was immediate exhaustion. The ecosystem had spent the last five months offering Jason an off-the-shelf solution, which he had repeatedly and vehemently rejected.
 
-## The Road Not Taken: The Rejection of `gpui-unofficial`
+## The Unused Harbor: Rejection of `gpui-unofficial`
 
 The crates.io publishing wall was never a sudden surprise. Because Cargo strictly forbids publishing any crate with `git` or `path` dependencies, anyone building an open-source library on top of Zed's unreleased Git commits is barred from crates.io.
 
@@ -48,7 +48,7 @@ To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit
 <table>
   <thead>
     <tr>
-      <th scope="col">Distribution Track</th>
+      <th scope="col">Shipping Channel</th>
       <th scope="col">Versioning &amp; Upstream Tracking</th>
       <th scope="col">Primary Steward</th>
       <th scope="col">Architecture / Philosophy</th>
@@ -101,12 +101,12 @@ The standoff over `gpui-pre` illustrates the fundamental tragedy of uncoordinate
 
 When an upstream maintainer treats a foundational engine as an internal implementation detail, a power vacuum forms. In that vacuum, technical decisions are rarely made on technical merits alone. Interpersonal friction, "Not Invented Here" syndrome, and corporate posturing over whose needs are "real-world" take precedence over shared infrastructure.
 
-Meanwhile, downstream users adapt with whatever duct tape works: when Longbridge refused to support community forks, the community simply cloned and retargeted Longbridge's component code to run across both `gpui-unofficial` (`-uo`) and `gpui-ce` (`gpui_ce_components*`).
+Meanwhile, downstream users adapt with whatever shims work: when Longbridge refused to support community forks, the community simply cloned and retargeted Longbridge's component code to run across both `gpui-unofficial` (`-uo`) and `gpui-ce` (`gpui_ce_components*`).
 
 As Chinese community member `cosoc` dryly summarized on the closed PR:
 
 > *"The community wants independence, but lacks a unifying leader. The engine team has no one focused on driving external progress. The ecosystem library authors aren't willing to risk backing uncertain branches. Zed has the resources, but their eyes are elsewhere. Verdict: It's a long road ahead. Choose your dependencies carefully. Meeting adjourned."*
 
-This is precisely why a resource like `gpui-archipelago` is necessary. The goal is not to declare a winner among the forks, nor to force everyone onto a single standard that people will inevitably abandon. It is simply to maintain a reliable, updated map of the terrain.
+This is precisely why a resource like `gpui-archipelago` is necessary. The goal is not to declare a winner among the forks, nor to force everyone onto a single standard that people will inevitably abandon. It is simply to maintain a reliable map of the archipelago.
 
-Until upstream Zed's automated pipeline is running in production, developers building with GPUI must recognize that choosing a distribution is not just choosing a version of an engine—it is choosing which faction's type universe you are willing to lock yourself into.
+Until upstream Zed's automated pipeline is running in production, developers building with GPUI must recognize that choosing a distribution is not just choosing a version of an engine, it is choosing whose harbor rules you are willing to navigate.
