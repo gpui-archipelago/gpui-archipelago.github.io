@@ -11,7 +11,7 @@ Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](http
 
 With those crates on crates.io, he unveiled a comprehensive restructuring under the **GPUI Kit** umbrella. The project introduced **[gpui-kit](https://crates.io/crates/gpui-kit)** as a unified facade crate that re-exports GPUI's core APIs alongside its own ecosystem layers: unstyled behavior and infra in **`gpui-base`**, styled widgets in **`gpui-component`**, and a dynamic scripting layer in **`gpui-shell`**—a runtime aimed at quick, compiler-free UI prototyping reminiscent of Qt QML.
 
-To outside observers, it looked like an author forced into an emergency workaround by upstream neglect. But across the GPUI community—and throughout the tracking threads documented on the *gpui-archipelago* project—the reaction was immediate exhaustion. The ecosystem had spent the last five months offering Jason an off-the-shelf solution, which he had repeatedly and vehemently rejected.
+To outside observers, it looked like an author forced into an emergency workaround by upstream neglect. But across the GPUI community the reaction was immediate exhaustion. The ecosystem had spent the last five months offering Jason an off-the-shelf solution, which he had repeatedly and vehemently rejected.
 
 ## The Unused Harbor: Rejection of `gpui-unofficial`
 
