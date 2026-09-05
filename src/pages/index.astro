@@ -24,10 +24,16 @@ const introForks = [
             "publishes up-to-date crates on crates.io, which covers distribution. Currently needs a maintainer.",
     },
     {
+        name: "gpui-kit",
+        url: "https://github.com/longbridge/gpui-kit",
+        description:
+            "Longbridge's shadow distribution: republishes upstream Zed crates to crates.io as gpui-pre under its own namespace, fronted by a gpui-kit facade over gpui-base, gpui-component, and gpui-shell — Jason Lee's answer to 315 days without an official release.",
+    },
+    {
         name: "gpui-ce",
         url: "https://github.com/gpui-ce/gpui-ce",
         description:
-            "a semi-official community fork aimed at governance, still working out where it’s headed.",
+            "a community fork working to accelerate testing of upstream features and maintain a faster-moving community version, publishing crates for standalone desktop apps.",
     },
     {
         name: "Kael",
@@ -41,7 +47,7 @@ const introForks = [
         // Static trusted markup (defined above in this file); <code> keeps the
         // WgpuSurface identifier in monospace per the data/prose split.
         description:
-            "a fork of gpui-ce that swaps the rendering/windowing backend for wgpu + winit. Unified code path across Windows, macOS, Linux, and WebAssembly. <code>WgpuSurface</code> lets you embed raw wgpu render passes (3D, game engines, custom shaders, anything) directly in your UI tree, making WGPUI suitable as a shell for 3D applications and mixed-mode interfaces.",
+            "GPUI ported to a single cross-platform backend (wgpu + winit) instead of per-platform code — leaner, and features land across Windows, macOS, Linux, and WebAssembly in one code path. <code>WgpuSurface</code> lets you embed raw wgpu render passes (3D, game engines, custom shaders, anything) directly in your UI tree, making WGPUI suitable as a shell for 3D applications and mixed-mode interfaces.",
     },
 ];
 

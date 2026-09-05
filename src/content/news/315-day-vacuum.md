@@ -7,7 +7,7 @@ tags: ["dispatch"]
 
 On September 2, 2026, tired of drifting outside Zed’s closed harbor, one of the ecosystem’s largest ships dropped anchor and claimed an island of its own.
 
-Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](https://github.com/longbridge/gpui-component) library backed by Longbridge, posted an exasperated public callout to the Zed team: 315 days had passed since the last official GPUI release to crates.io, with 523 commits piled up on upstream `main`. After 24 hour ultimatum expired, unwilling to wait a month for an official release pipeline, he acted alone: republishing a snapshot of Zed’s GPUI crates under a renamed gpui-pre-* family.
+Jason Lee (`huacnlee`), lead maintainer of the widely used [gpui-component](https://github.com/longbridge/gpui-component) library backed by Longbridge, posted an exasperated public callout to the Zed team: 315 days had passed since the last official GPUI release to crates.io, with 523 commits piled up on upstream `main`. After 24 hour ultimatum expired, unwilling to wait a month for an official release pipeline, he acted alone: republishing a snapshot of Zed's GPUI crates under a renamed **`gpui-pre-*`** family.
 
 With those crates on crates.io, he unveiled a comprehensive restructuring under the **GPUI Kit** umbrella. The project introduced **[gpui-kit](https://crates.io/crates/gpui-kit)** as a unified facade crate that re-exports GPUI's core APIs alongside its own ecosystem layers: unstyled behavior and infra in **`gpui-base`**, styled widgets in **`gpui-component`**, and a dynamic scripting layer in **`gpui-shell`**—a runtime aimed at quick, compiler-free UI prototyping reminiscent of Qt QML.
 
@@ -35,11 +35,11 @@ The public stance in September was therefore not caused by a lack of solutions, 
 
 When Zed failed to publish an official 0.3.0 release within 24 hours of Jason's tweet, he didn't turn to the existing community mirror he had spent months dismissing. Instead, he republished the crates himself under a new namespace: **[gpui-pre](https://crates.io/crates/gpui-pre)**.
 
-While Jason claimed on X that it is "just a crates release CI" that keeps up with upstream, the community has no actual receipts. The release notes don't specify which Zed tag or commit hash `gpui-pre 0.3.x` was cut from. There is no public, audited packaging repository, and no way for downstream users to verify whether `gpui-pre` is a clean mirror of a specific Zed commit or an arbitrary snapshot with custom patches rolled in.
+While Jason claimed on X that it is "just a crates release CI" that keeps up with upstream, the community has no actual receipts. The `gpui-pre` releases published so far — 0.3.0 through 0.3.3, all pushed within a single day on September 3 — appear to have been released manually; the automated pipeline that supposedly defines them is still in the process of being set up.
 
 The rationale that dismissed community mirrors as unvalidated middlemen that "create problems without fixing them" vanished the moment the republished crate belonged to Longbridge.
 
-To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit` collided directly with Nate Butler's existing **`gpuikit`** repository (an opinionated UI toolkit that has been in active development since the GPUI 2 rewrite) sparking immediate friction over project naming across community forums.
+To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit` collided directly with Nate Butler's existing **[`gpuikit`](https://github.com/iamnbutler/gpuikit)** repository (an opinionated UI toolkit that has been in active development since the GPUI 2 rewrite) sparking immediate friction over project naming across community forums.
 
 ## The Real-World Breakdown
 
@@ -68,11 +68,11 @@ To compound the confusion, the sudden rebrand from `gpui-component` to `gpui-kit
       <td data-label="Versioning &amp; Upstream Tracking">Republishes upstream Zed release tags directly to crates.io</td>
       <td data-label="Primary Steward">Nate Butler</td>
       <td data-label="Architecture / Philosophy">Minimal, transparent crates.io passthrough to unblock publishing.</td>
-      <td data-label="Downstream Crates"><code>gpuikit</code> (Nate Butler's toolkit), Longbridge's GPUI Kit retargeted for unofficial mirrors (<code>gpui-component-uo</code>, <code>gpui-base-uo</code>)</td>
+	      <td data-label="Downstream Crates"><a href="https://github.com/iamnbutler/gpuikit"><code>gpuikit</code></a> (Nate Butler's toolkit), Longbridge's GPUI Kit retargeted for unofficial mirrors (<code>gpui-component-uo</code>, <code>gpui-base-uo</code>)</td>
     </tr>
     <tr>
       <td data-label="Distribution Track"><strong><a href="https://crates.io/crates/gpui-pre"><code>gpui-pre</code></a> / <a href="https://crates.io/crates/gpui-kit"><code>gpui-kit</code></a></strong></td>
-      <td data-label="Versioning &amp; Upstream Tracking">Arbitrary current tip of Zed Git republished to crates.io</td>
+      		<td data-label="Versioning &amp; Upstream Tracking">Rev-pinned snapshots of Zed Git republished to crates.io; each version names its source commit</td>
       <td data-label="Primary Steward">Jason Lee (Longbridge)</td>
       <td data-label="Architecture / Philosophy">Full-stack facade (<code>gpui-kit</code>) over modular layers: unstyled infra (<code>gpui-base</code>), widgets (<code>gpui-component</code>), and dynamic QML-style scripting (<code>gpui-shell</code>), backed by <code>gpui-pre-*</code>.</td>
       <td data-label="Downstream Crates">Longbridge apps, <code>gpui-kit</code> native ecosystem</td>

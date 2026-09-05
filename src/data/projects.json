@@ -593,9 +593,17 @@
       "forks": 7,
       "crateStatus": "published",
       "crateUrl": "https://crates.io/crates/gpui-unofficial",
-      "tag": "upstream mirror",
-      "maintenance": "needs-maintainer"
-    },
+	      "tag": "upstream mirror",
+	      "maintenance": "needs-maintainer"
+	    },
+	    {
+	      "name": "gpui-pre",
+	      "category": "Forks",
+	      "url": "https://crates.io/crates/gpui-pre",
+	      "description": "Longbridge's republish of upstream Zed's GPUI crates to crates.io as gpui-pre-* — rev-pinned snapshots of upstream Git that back the GPUI Kit umbrella.",
+	      "crateStatus": "published",
+	      "crateUrl": "https://crates.io/crates/gpui-pre"
+	    },
     {
       "name": "WGPUI",
       "category": "Forks",
@@ -662,9 +670,21 @@
       "name": "gpui-component",
       "category": "Libraries",
       "url": "https://github.com/longbridge/gpui-component",
-      "image": "https://github.com/user-attachments/assets/e1ecb9c3-2dd3-431e-bd97-5a819c30e551",
-      "description": "UI components for building fantastic desktop applications using gpui."
-    },
+	      "image": "https://github.com/user-attachments/assets/e1ecb9c3-2dd3-431e-bd97-5a819c30e551",
+	      "description": "UI components for building fantastic desktop applications using gpui."
+	    },
+	    {
+	      "name": "gpui-kit",
+	      "category": "Libraries",
+	      "url": "https://github.com/longbridge/gpui-kit",
+	      "description": "Longbridge's unified facade crate for the GPUI Kit umbrella — re-exports GPUI's core APIs alongside its ecosystem layers: gpui-base (unstyled behavior and infra), gpui-component (styled widgets), and gpui-shell (compiler-free, QML-style scripting). Not to be confused with [gpuikit](https://github.com/iamnbutler/gpuikit), Nate Butler's separate UI toolkit."
+	    },
+	    {
+	      "name": "gpuikit",
+	      "category": "Libraries",
+	      "url": "https://github.com/iamnbutler/gpuikit",
+	      "description": "A UI toolkit for gpui applications — a conceptual union of SwiftUI and web-style component libraries — that builds against [gpui-unofficial](https://crates.io/crates/gpui-unofficial). Not to be confused with Longbridge's [gpui-kit](https://crates.io/crates/gpui-kit) facade crate."
+	    },
     {
       "name": "gpui-d3rs",
       "category": "Libraries",
