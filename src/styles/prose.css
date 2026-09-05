@@ -39,7 +39,16 @@
         padding-left: 1.4em;
     }
 
-    .prose li {
-        margin-bottom: var(--spacing-sm);
-    }
+    	.prose li {
+    		margin-bottom: var(--spacing-sm);
+    	}
+
+    	/* Blockquotes inside prose (quoted maintainers, replies, community
+    	   comments): same left-accent treatment as the home hero's quote. */
+    	.prose blockquote {
+    		margin: 0;
+    		padding: 0 0 0 16px;
+    		border-left: 2px solid var(--border-accent);
+    		color: var(--content-muted);
+    	}
 }
