@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# sibling working copy: the fork-map SPA (github.com/gpui-archipelago/map),
+# cloned in so both repos can be edited side by side. This site never builds or
+# imports it; ignoring it also keeps Tailwind v4 from scanning its sources.
+/map/

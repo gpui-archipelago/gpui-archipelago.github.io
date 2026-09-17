@@ -8,6 +8,14 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Sibling working copy
+
+`map/` is a gitignored clone of
+[gpui-archipelago/map](https://github.com/gpui-archipelago/map) — the fork-map
+SPA (React + Vite) — kept for side-by-side work on both repos. This site never
+builds, imports, or deploys it: don't add it to build inputs, and don't remove
+or "fix" its `/map/` entry in `.gitignore`.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
