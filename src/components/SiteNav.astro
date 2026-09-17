@@ -1,0 +1,61 @@
+---
+// The primary site navigation. The link list lives here (same pattern as
+// ForksTable, where the data sits next to the markup that renders it), so
+// adding a section is a one-line change. SiteHeader relies on this rendering
+// the `#site-nav` element that its mobile toggle and script target.
+
+interface NavLink {
+    label: string;
+    href: string;
+    /**
+     * Internal links carry `aria-current="page"` and the rust accent while the
+     * visitor is anywhere in their section. External links (like GitHub) have
+     * no current state, so they omit both.
+     */
+    matches?: (path: string) => boolean;
+}
+
+const { pathname } = Astro.url;
+
+const links: NavLink[] = [
+    { label: "Home", href: "/", matches: (path) => path === "/" },
+    {
+        label: "Manifest",
+        href: "/manifest/",
+        matches: (path) => path.startsWith("/manifest"),
+    },
+    {
+        label: "Map",
+        href: "/map/",
+        matches: (path) => path.startsWith("/map"),
+    },
+    {
+        label: "News",
+        href: "/news/",
+        matches: (path) => path.startsWith("/news/"),
+    },
+    { label: "GitHub", href: "https://github.com/gpui-archipelago" },
+];
+---
+
+<nav
+    id="site-nav"
+    class="flex gap-7 max-sm:absolute max-sm:inset-x-0 max-sm:top-full max-sm:flex-col max-sm:gap-0 max-sm:bg-surface max-sm:pb-4 max-sm:shadow-[0_12px_24px_rgba(23,77,104,0.08)] max-sm:hidden peer-aria-expanded:max-sm:flex"
+    aria-label="Site"
+>
+    {
+        links.map((link) => (
+            <a
+                class:list={[
+                    "text-sm text-content-muted no-underline max-sm:px-6 max-sm:py-3 max-sm:text-code",
+                    link.matches &&
+                        "hover:text-content aria-[current=page]:text-action",
+                ]}
+                href={link.href}
+                aria-current={link.matches?.(pathname) ? "page" : undefined}
+            >
+                {link.label}
+            </a>
+        ))
+    }
+</nav>

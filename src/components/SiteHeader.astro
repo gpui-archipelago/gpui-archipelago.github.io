@@ -2,11 +2,7 @@
 // The mark appears exactly once per page: here, in the header, badge-sized
 // next to the wordmark.
 import logo from "../assets/logo.png";
-
-const { pathname } = Astro.url;
-const isHome = pathname === "/";
-const isManifest = pathname.startsWith("/manifest");
-const isNews = pathname.startsWith("/news/");
+import SiteNav from "./SiteNav.astro";
 ---
 
 <header class="sticky top-0 z-10 bg-surface/90 backdrop-blur">
@@ -76,31 +72,7 @@ const isNews = pathname.startsWith("/news/");
                 <line x1="18" y1="6" x2="6" y2="18"></line>
             </svg>
         </button>
-        <nav
-            id="site-nav"
-            class="flex gap-7 max-sm:absolute max-sm:inset-x-0 max-sm:top-full max-sm:flex-col max-sm:gap-0 max-sm:bg-surface max-sm:pb-4 max-sm:shadow-[0_12px_24px_rgba(23,77,104,0.08)] max-sm:hidden peer-aria-expanded:max-sm:flex"
-            aria-label="Site"
-        >
-            <a
-                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
-                href="/"
-                aria-current={isHome ? "page" : undefined}>Home</a
-            >
-            <a
-                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
-                href="/manifest/"
-                aria-current={isManifest ? "page" : undefined}>Manifest</a
-            >
-            <a
-                class="text-sm text-content-muted no-underline hover:text-content aria-[current=page]:text-action max-sm:px-6 max-sm:py-3 max-sm:text-code"
-                href="/news/"
-                aria-current={isNews ? "page" : undefined}>News</a
-            >
-            <a
-                class="text-sm text-content-muted no-underline hover:text-content max-sm:px-6 max-sm:py-3 max-sm:text-code"
-                href="https://github.com/gpui-archipelago">GitHub</a
-            >
-        </nav>
+        <SiteNav />
     </div>
 </header>
 
