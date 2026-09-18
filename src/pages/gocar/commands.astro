@@ -1,11 +1,13 @@
 ---
 // Gocar — Commands. The subcommands the Fork Map's own views name, each with
-// where its behaviour was measured. The tool's --help is the authority for the
-// full surface; this is the slice the map and its studies actually exercise.
+// where its behaviour was measured, then the same list again as prose: what
+// each one is for, grouped by what you are doing when you reach for it. The
+// tool's --help is the authority for the full surface; this is the slice the
+// map and its studies actually exercise.
 import Layout from "../../layouts/Layout.astro";
 import GocarNav from "../../components/GocarNav.astro";
 import PageHeader from "../../components/PageHeader.astro";
-import { GOCAR_COMMANDS } from "../../data/gocar";
+import { GOCAR_COMMANDS, GOCAR_GROUPS } from "../../data/gocar";
 ---
 
 <Layout
@@ -56,11 +58,30 @@ import { GOCAR_COMMANDS } from "../../data/gocar";
                 </table>
             </div>
             <p class="table-note">
-                These are the commands the Fork Map's views name and the studies
-                measured; the docs each one cites open in the map's reader.
+                The docs each one cites open in the map's reader.
                 <code>cargo gocar --help</code> is the authority for the whole
-                surface.
+                surface, flags and options included.
             </p>
         </div>
     </section>
+
+    {GOCAR_GROUPS.map((group) => (
+        <section class="section border-b border-border-divider last:border-b-0">
+            <div class="content">
+                <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
+                    {group.title}
+                </h2>
+                <div class="prose">
+                    {GOCAR_COMMANDS.filter((c) => c.group === group.id).map(
+                        (command) => (
+                            <>
+                                <h3 class="font-mono">{command.line}</h3>
+                                <p>{command.details}</p>
+                            </>
+                        ),
+                    )}
+                </div>
+            </div>
+        </section>
+    ))}
 </Layout>
