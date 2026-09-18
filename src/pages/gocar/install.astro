@@ -10,11 +10,17 @@ const facts = [
     { label: "crate", value: GOCAR_CRATE.name, mono: true },
     { label: "version", value: GOCAR_CRATE.version, mono: true },
     { label: "published", value: GOCAR_CRATE.published, mono: true },
-    { label: "crates.io", value: "crates.io/crates/cargo-gocar", href: GOCAR_CRATE.cratesUrl, mono: true },
+    {
+        label: "crates.io",
+        value: "crates.io/crates/cargo-gocar",
+        href: GOCAR_CRATE.cratesUrl,
+        mono: true,
+    },
 ];
 ---
 
 <Layout
+    siteNav={false}
     title="Install — Gocar — gpui-archipelago"
     description="Install Gocar, the Cargo subcommand for binding GPUI forks, and see what a Gocar-managed project looks like."
 >
@@ -27,9 +33,7 @@ const facts = [
 
     <section class="section border-b border-border-divider last:border-b-0">
         <div class="content">
-            <h2
-                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
-            >
+            <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
                 Install the subcommand
             </h2>
             <pre class="command-block"><code>{GOCAR_CRATE.install}</code></pre>
@@ -46,9 +50,7 @@ const facts = [
 
     <section class="section border-b border-border-divider last:border-b-0">
         <div class="content">
-            <h2
-                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
-            >
+            <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
                 What is published
             </h2>
             <div class="table-scroll">
@@ -60,25 +62,25 @@ const facts = [
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            facts.map((fact) => (
-                                <tr>
-                                    <td data-label="Fact">{fact.label}</td>
-                                    <td
-                                        class={fact.mono
+                        {facts.map((fact) => (
+                            <tr>
+                                <td data-label="Fact">{fact.label}</td>
+                                <td
+                                    class={
+                                        fact.mono
                                             ? "font-mono text-code"
-                                            : undefined}
-                                        data-label="Value"
-                                    >
-                                        {fact.href ? (
-                                            <a href={fact.href}>{fact.value}</a>
-                                        ) : (
-                                            fact.value
-                                        )}
-                                    </td>
-                                </tr>
-                            ))
-                        }
+                                            : undefined
+                                    }
+                                    data-label="Value"
+                                >
+                                    {fact.href ? (
+                                        <a href={fact.href}>{fact.value}</a>
+                                    ) : (
+                                        fact.value
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -92,9 +94,7 @@ const facts = [
 
     <section class="section border-b border-border-divider last:border-b-0">
         <div class="content">
-            <h2
-                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
-            >
+            <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
                 What a managed project looks like
             </h2>
             <div class="prose">

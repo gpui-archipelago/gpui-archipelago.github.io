@@ -6,11 +6,19 @@ import "../styles/global.css";
 interface Props {
     title?: string;
     description?: string;
+    /**
+     * Render the site's global nav. A section that is its own top-level chrome
+     * passes `false` and renders its own header instead (`/gocar/`, the way the
+     * Fork Map does): the site nav stays exactly as it is — it simply is not
+     * that page's bar, so the section wears one header rather than two.
+     */
+    siteNav?: boolean;
 }
 
 const {
     title = "gpui-archipelago",
     description = "A community-maintained space for anyone building with GPUI outside of Zed. Every fork is an island — there’s no mainland, so the islands have to find each other.",
+    siteNav = true,
 } = Astro.props;
 ---
 
@@ -30,7 +38,7 @@ const {
         <title>{title}</title>
     </head>
     <body>
-        <SiteHeader />
+        {siteNav && <SiteHeader />}
         <main>
             <slot />
         </main>
