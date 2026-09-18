@@ -1,0 +1,113 @@
+---
+// Gocar — Overview. The section's landing: what the tool is, how it relates to
+// the fork map (the map is its exported dataset), how its claims were checked,
+// and what it deliberately does not do.
+import Layout from "../../layouts/Layout.astro";
+import GocarNav from "../../components/GocarNav.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
+---
+
+<Layout
+    title="Gocar — gpui-archipelago"
+    description="Gocar is a Cargo subcommand for binding GPUI forks: it records which fork and release a project binds, resolves it, and verifies the result. The fork map is a view of what it measures."
+>
+    <GocarNav />
+
+    <PageHeader title="Gocar" meta={GOCAR_CRATE.description} />
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                What it is
+            </h2>
+            <div class="prose">
+                <p>
+                    Gocar is a <code>cargo</code> subcommand. You tell it which
+                    fork and release your project binds, and from then on that
+                    binding is recorded, resolved, and verified by the tool
+                    rather than by a <code>package = "…"</code> rename someone
+                    has to get right by hand:
+                </p>
+            </div>
+            <pre class="command-block"><code>{`${GOCAR_CRATE.install}\ncargo gocar new my-app --provider gpui-unofficial`}</code></pre>
+            <div class="prose">
+                <p>
+                    That matters because the forks publish the same project
+                    under six package names, with unsynchronised versions. A
+                    hand-edited binding that is subtly wrong usually surfaces as
+                    a compile error deep in a build — the worst place to find
+                    out.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                The fork map is its dataset
+            </h2>
+            <div class="prose">
+                <p>
+                    <code>cargo gocar export-fork-map</code> writes the bundle
+                    the <a href="/map/">Fork Map</a> renders
+                    (<code>gocar.forkmap.manifest.v1</code>). The map is a
+                    read-only view of what Gocar measured: it compares the
+                    measured surface across forks and releases, and it never
+                    fills a gap with a guess.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                How the claims are checked
+            </h2>
+            <div class="prose">
+                <p>
+                    The studies behind the map's badges ran on real crates.io
+                    artifacts — real compiles, real <code>rustc</code> versions,
+                    real kits — not on fixtures. They are readable in the map
+                    itself, from <a href="/map/#/docs">its documents index</a>,
+                    and every compile claim the map makes links the study it
+                    came from.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                What it does not do
+            </h2>
+            <div class="prose">
+                <p>
+                    V1 does not rewrite your code. Where a change is needed it
+                    names the site and the reason, and leaves the edit to you:
+                    the study that ran the whole flow on a real app found the
+                    auto-driven share of a real break is zero, and left the move
+                    manual on purpose — <a href={mapDoc("9")}>doc 09</a>.
+                </p>
+                <p>
+                    It also refuses what it cannot vouch for: a prerelease floor
+                    (<a href={mapDoc("7")}>doc 07</a>), and a second fork
+                    anywhere in the dependency graph (<a href={mapDoc("10")}
+                        >doc 10</a
+                    >).
+                </p>
+            </div>
+        </div>
+    </section>
+</Layout>

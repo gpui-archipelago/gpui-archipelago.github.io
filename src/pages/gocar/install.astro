@@ -1,0 +1,112 @@
+---
+// Gocar — Install. The command, what a Gocar-managed project looks like, and
+// the crate facts (version maintained by hand; crates.io is the authority).
+import Layout from "../../layouts/Layout.astro";
+import GocarNav from "../../components/GocarNav.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { GOCAR_CRATE } from "../../data/gocar";
+
+const facts = [
+    { label: "crate", value: GOCAR_CRATE.name, mono: true },
+    { label: "version", value: GOCAR_CRATE.version, mono: true },
+    { label: "published", value: GOCAR_CRATE.published, mono: true },
+    { label: "crates.io", value: "crates.io/crates/cargo-gocar", href: GOCAR_CRATE.cratesUrl, mono: true },
+];
+---
+
+<Layout
+    title="Install — Gocar — gpui-archipelago"
+    description="Install Gocar, the Cargo subcommand for binding GPUI forks, and see what a Gocar-managed project looks like."
+>
+    <GocarNav />
+
+    <PageHeader
+        title="Install"
+        meta={`Gocar ${GOCAR_CRATE.version} — a cargo subcommand`}
+    />
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                Install the subcommand
+            </h2>
+            <pre class="command-block"><code>{GOCAR_CRATE.install}</code></pre>
+            <div class="prose">
+                <p>
+                    It is a <code>cargo</code> subcommand, so it needs a working
+                    Rust toolchain, and it lands on your <code>PATH</code> as
+                    <code>cargo gocar</code>. Every command is run from the
+                    project it manages.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                What is published
+            </h2>
+            <div class="table-scroll">
+                <table class="min-w-96 max-sm:min-w-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fact</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            facts.map((fact) => (
+                                <tr>
+                                    <td data-label="Fact">{fact.label}</td>
+                                    <td
+                                        class={fact.mono
+                                            ? "font-mono text-code"
+                                            : undefined}
+                                        data-label="Value"
+                                    >
+                                        {fact.href ? (
+                                            <a href={fact.href}>{fact.value}</a>
+                                        ) : (
+                                            fact.value
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">
+                The version on this page is maintained by hand, so it can lag
+                the registry. <a href={GOCAR_CRATE.cratesUrl}>crates.io</a> is
+                the authority.
+            </p>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2
+                class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight"
+            >
+                What a managed project looks like
+            </h2>
+            <div class="prose">
+                <p>
+                    A Gocar-managed project is an ordinary Cargo project: the
+                    fork binding lives in <code>Cargo.toml</code> as a package
+                    rename, and Gocar keeps it resolved and verified. The
+                    <a href="/map/#/configure">Fork Map's Configure view</a>
+                    writes the same two files for any fork and release it has
+                    measured, so you can read one before installing anything.
+                </p>
+            </div>
+        </div>
+    </section>
+</Layout>

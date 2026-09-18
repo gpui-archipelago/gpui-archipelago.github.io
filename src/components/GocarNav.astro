@@ -1,0 +1,61 @@
+---
+// The Gocar section's own chrome: a breadcrumb in the Fork Map's shape
+// (`gpui-archipelago / Gocar`, the wordmark linking home), the section's tab
+// row, and the crate facts on the right. It is deliberately not in SiteNav —
+// the section is reachable by URL and by the links its own pages make, and the
+// site's nav stays as it is.
+//
+// Sits directly under the sticky site header rather than sticking itself: the
+// header's mobile menu opens inside that header, and a second sticky row would
+// have to guess at its height.
+import { GOCAR_CRATE, GOCAR_TABS } from "../data/gocar";
+
+const { pathname } = Astro.url;
+
+/** "/gocar/" is a prefix of every tab, so it matches exactly; the others by
+ * prefix (so a future child page keeps the tab lit). */
+const isCurrent = (href: string) =>
+    href === "/gocar/" ? pathname === "/gocar/" : pathname.startsWith(href);
+
+const tab = "rounded-md px-3 py-1.5 text-small font-medium no-underline transition-colors";
+---
+
+<div class="border-b border-border-divider bg-surface-warm">
+    <div
+        class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-6 py-3"
+    >
+        <p class="m-0 font-mono text-code">
+            <a
+                class="text-content-muted no-underline hover:text-action"
+                href="/">gpui-archipelago</a
+            ><span class="text-content-muted" aria-hidden="true"> / </span><span
+                class="font-semibold text-content">Gocar</span
+            >
+        </p>
+        <nav class="flex flex-wrap items-center gap-1" aria-label="Gocar">
+            {
+                GOCAR_TABS.map((t) => (
+                    <a
+                        class={`${tab} ${
+                            isCurrent(t.href)
+                                ? "bg-action-tint text-on-action"
+                                : "text-content-muted hover:bg-surface hover:text-action"
+                        }`}
+                        href={t.href}
+                        aria-current={isCurrent(t.href) ? "page" : undefined}
+                    >
+                        {t.label}
+                    </a>
+                ))
+            }
+        </nav>
+        <p class="m-0 font-mono text-small text-content-muted sm:ml-auto">
+            v{GOCAR_CRATE.version}
+            <span aria-hidden="true"> · </span>
+            <a
+                class="text-content-muted hover:text-action"
+                href={GOCAR_CRATE.cratesUrl}>crates.io ↗</a
+            >
+        </p>
+    </div>
+</div>

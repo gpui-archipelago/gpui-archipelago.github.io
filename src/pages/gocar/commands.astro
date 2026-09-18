@@ -1,0 +1,65 @@
+---
+// Gocar — Commands. The subcommands the Fork Map's own views name, each with
+// where its behaviour was measured. The tool's --help is the authority for the
+// full surface; this is the slice the map and its studies actually exercise.
+import Layout from "../../layouts/Layout.astro";
+import GocarNav from "../../components/GocarNav.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { GOCAR_COMMANDS } from "../../data/gocar";
+---
+
+<Layout
+    title="Commands — Gocar — gpui-archipelago"
+    description="The Gocar subcommands the fork map names, and the study each behaviour was measured in."
+>
+    <GocarNav />
+
+    <PageHeader
+        title="Commands"
+        meta="The subcommands the Fork Map names — and where each was measured"
+    />
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <div class="table-scroll">
+                <table class="min-w-144 max-sm:min-w-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="w-[34%]">
+                                Command
+                            </th>
+                            <th scope="col">What it does</th>
+                            <th scope="col">Measured in</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {GOCAR_COMMANDS.map((command) => (
+                            <tr>
+                                <td
+                                    class="font-mono text-code"
+                                    data-label="Command"
+                                >
+                                    {command.line}
+                                </td>
+                                <td data-label="What it does">
+                                    {command.what}
+                                </td>
+                                <td data-label="Measured in">
+                                    <a href={command.evidence.href}>
+                                        {command.evidence.label}
+                                    </a>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">
+                These are the commands the Fork Map's views name and the studies
+                measured; the docs each one cites open in the map's reader.
+                <code>cargo gocar --help</code> is the authority for the whole
+                surface.
+            </p>
+        </div>
+    </section>
+</Layout>

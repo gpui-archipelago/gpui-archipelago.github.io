@@ -23,4 +23,24 @@
             rgba(250, 224, 183, 0) 100%
         );
     }
+
+    /* A runnable command, given its own block: the Gocar section is the first
+	   place on this site where the reader is meant to copy something out. */
+    .command-block {
+        margin: 0 0 var(--spacing-md);
+        padding: var(--spacing-sm) 16px;
+        background: var(--surface-warm);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        font-family: var(--font-mono);
+        font-size: var(--text-code);
+        line-height: var(--leading-code);
+        overflow-x: auto;
+    }
+
+    .command-block code {
+        background: none;
+        padding: 0;
+        font-size: inherit;
+    }
 }

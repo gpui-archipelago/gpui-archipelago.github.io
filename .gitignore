@@ -27,3 +27,9 @@ pnpm-debug.log*
 # cloned in so both repos can be edited side by side. This site never builds or
 # imports it; ignoring it also keeps Tailwind v4 from scanning its sources.
 /map/
+
+# sibling working copy: the corpus repo (github.com/gpui-archipelago/gpui-corpus),
+# whose curation/research/*.md are the published study docs the fork map's
+# reader renders. Cloned in for authoring passes; the map fetches from here with
+# GPUI_CORPUS_DIR=<this> scripts/fetch-docs.sh. Never built or imported.
+/gpui-corpus/
