@@ -1,9 +1,11 @@
 ---
-// Gocar — Commands. The subcommands the Fork Map's own views name, each with
-// where its behaviour was measured, then the same list again as prose: what
-// each one is for, grouped by what you are doing when you reach for it. The
-// tool's --help is the authority for the full surface; this is the slice the
-// map and its studies actually exercise.
+// Gocar — Commands. The tool's whole surface, one line each, then the same
+// list again as prose grouped by what you are doing when you reach for it.
+// The groups are the toolchain's own four stages, and the table follows them
+// so it reads top to bottom as the sections below.
+//
+// Where a study measured a command's behaviour the row links it; the handful
+// no published study covers carry no link rather than a borrowed one.
 import Layout from "../../layouts/Layout.astro";
 import GocarNav from "../../components/GocarNav.astro";
 import PageHeader from "../../components/PageHeader.astro";
@@ -13,13 +15,13 @@ import { GOCAR_COMMANDS, GOCAR_GROUPS } from "../../data/gocar";
 <Layout
     siteNav={false}
     title="Commands — Gocar — gpui-archipelago"
-    description="The Gocar subcommands the fork map names, and the study each behaviour was measured in."
+    description="The whole cargo gocar command surface, and where each behaviour was measured."
 >
     <GocarNav />
 
     <PageHeader
         title="Commands"
-        meta="The subcommands the Fork Map names — and where each was measured"
+        meta="The whole surface — and where each behaviour was measured"
     />
 
     <section class="section border-b border-border-divider last:border-b-0">
@@ -28,11 +30,13 @@ import { GOCAR_COMMANDS, GOCAR_GROUPS } from "../../data/gocar";
                 <table class="min-w-144 max-sm:min-w-0">
                     <thead>
                         <tr>
-                            <th scope="col" class="w-[34%]">
+                            <th scope="col" class="w-[40%]">
                                 Command
                             </th>
                             <th scope="col">What it does</th>
-                            <th scope="col">Measured in</th>
+                            <th scope="col" class="w-[20%]">
+                                Measured in
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,9 +52,15 @@ import { GOCAR_COMMANDS, GOCAR_GROUPS } from "../../data/gocar";
                                     {command.what}
                                 </td>
                                 <td data-label="Measured in">
-                                    <a href={command.evidence.href}>
-                                        {command.evidence.label}
-                                    </a>
+                                    {command.evidence ? (
+                                        <a href={command.evidence.href}>
+                                            {command.evidence.label}
+                                        </a>
+                                    ) : (
+                                        <span class="text-content-muted">
+                                            —
+                                        </span>
+                                    )}
                                 </td>
                             </tr>
                         ))}
@@ -58,9 +68,11 @@ import { GOCAR_COMMANDS, GOCAR_GROUPS } from "../../data/gocar";
                 </table>
             </div>
             <p class="table-note">
-                The docs each one cites open in the map's reader.
-                <code>cargo gocar --help</code> is the authority for the whole
-                surface, flags and options included.
+                The studies cover the commands whose behaviour was measured
+                against real crates.io artifacts; the rest carry no link rather
+                than a borrowed one. The cited docs open in the map's reader,
+                and <code>cargo gocar --help</code> is the authority for the
+                whole surface, flags and options included.
             </p>
         </div>
     </section>

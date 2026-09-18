@@ -27,18 +27,25 @@ import { GOCAR_CRATE, GOCAR_RELEASE_FACTS, mapDoc } from "../../data/gocar";
             </h2>
             <div class="prose">
                 <p>
-                    Gocar is a <code>cargo</code> subcommand. You tell it which
-                    fork and release your project binds, and from then on that
-                    binding is recorded, resolved, and verified by the tool
-                    rather than by a <code>package = "…"</code> rename someone
-                    has to get right by hand.
+                    Gocar is a <code>cargo</code> subcommand, built on one
+                    position: in this ecosystem a package name is a
+                    <em>binding</em>, not an identity. The forks publish the
+                    same project under six names with unsynchronised versions,
+                    so the name on its own tells you very little — what matters
+                    is the measured contract behind it, which can be measured,
+                    compared and verified.
                 </p>
                 <p>
-                    That matters because the forks publish the same project
-                    under six package names, with unsynchronised versions. A
-                    hand-edited binding that is subtly wrong usually surfaces as
-                    a compile error deep in a multi-minute build — the worst
-                    place to find out.
+                    So the toolchain does four things in a row. It
+                    <strong>measures</strong> the published fork artifacts into
+                    a dataset, <strong>resolves</strong> what you asked for
+                    against that dataset, <strong>switches</strong> providers as
+                    explicit steps you can read as a diff, and{" "}
+                    <strong>audits</strong> the result. Nothing over-claims
+                    along the way: registry truth is real, and an attestation is
+                    measured where one exists and
+                    <code>null</code> — and therefore refused — where it does
+                    not.
                 </p>
             </div>
         </div>
@@ -89,10 +96,18 @@ cargo build`}</code></pre>
                     </li>
                 </ul>
                 <p>
-                    You can read the two files before installing anything: the
-                    <a href="/map/#/configure">Fork Map's Configure view</a>
-                    writes the same <code>Cargo.toml</code> and
-                    <code>main.rs</code> for any fork and release it has
+                    A project can also put the engine behind a
+                    <a href="/gocar/commands/">facade crate</a> and depend on
+                    that instead. The binding then lives in the facade, which is
+                    itself a managed project, and the app's own dependency line
+                    never changes when the engine does.
+                </p>
+                <p>
+                    You can read the two generated files before installing
+                    anything: the{" "}
+                    <a href="/map/#/configure">Fork Map's Configure view</a>{" "}
+                    writes the same <code>Cargo.toml</code>
+                    and <code>main.rs</code> for any fork and release it has
                     measured.
                 </p>
             </div>
@@ -137,11 +152,14 @@ cargo build`}</code></pre>
             </h2>
             <div class="prose">
                 <p>
-                    V1 does not rewrite your code. Where a change is needed it
-                    names the site and the reason, and leaves the edit to you:
-                    the study that ran the whole flow on a real app found the
-                    auto-driven share of a real break is zero, and left the move
-                    manual on purpose — <a href={mapDoc("9")}>doc 09</a>.
+                    It does not decide your migration. It can apply a confirmed
+                    rename mechanically, and it can hold the old names compiling
+                    through a facade while you move on your own schedule — but
+                    it will not invent the edit a break needs, because that is a
+                    design decision. The study that ran the whole flow on a real
+                    app found the auto-driven share of a real break is zero, and
+                    the one rewrite the rule store did apply produced code that
+                    no longer compiled — <a href={mapDoc("9")}>doc 09</a>.
                 </p>
                 <p>
                     It also refuses what it cannot vouch for: a prerelease floor
