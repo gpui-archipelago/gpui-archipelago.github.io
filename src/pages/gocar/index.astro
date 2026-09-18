@@ -1,11 +1,14 @@
 ---
-// Gocar — Overview. The section's landing: what the tool is, how it relates to
-// the fork map (the map is its exported dataset), how its claims were checked,
-// and what it deliberately does not do.
+// Gocar — Overview. The section's landing: what the tool is and why it exists,
+// a quick start, what a managed project looks like, what its dataset is, the
+// boundaries it keeps, and the current release.
+//
+// The release facts and "what a managed project looks like" live here rather
+// than on Install, so each fact has one home; Install is the command itself.
 import Layout from "../../layouts/Layout.astro";
 import GocarNav from "../../components/GocarNav.astro";
 import PageHeader from "../../components/PageHeader.astro";
-import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
+import { GOCAR_CRATE, GOCAR_RELEASE_FACTS, mapDoc } from "../../data/gocar";
 ---
 
 <Layout
@@ -28,17 +31,14 @@ import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
                     fork and release your project binds, and from then on that
                     binding is recorded, resolved, and verified by the tool
                     rather than by a <code>package = "…"</code> rename someone
-                    has to get right by hand:
+                    has to get right by hand.
                 </p>
-            </div>
-            <pre class="command-block"><code>{`${GOCAR_CRATE.install}\ncargo gocar new my-app --provider gpui-unofficial`}</code></pre>
-            <div class="prose">
                 <p>
                     That matters because the forks publish the same project
                     under six package names, with unsynchronised versions. A
                     hand-edited binding that is subtly wrong usually surfaces as
-                    a compile error deep in a build — the worst place to find
-                    out.
+                    a compile error deep in a multi-minute build — the worst
+                    place to find out.
                 </p>
             </div>
         </div>
@@ -47,16 +47,20 @@ import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
     <section class="section border-b border-border-divider last:border-b-0">
         <div class="content">
             <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
-                The fork map is its dataset
+                Quick start
             </h2>
+            <pre class="command-block"><code>{`cargo install cargo-gocar
+cargo gocar new my-app --provider gpui-unofficial
+cd my-app
+cargo build`}</code></pre>
             <div class="prose">
                 <p>
-                    <code>cargo gocar export-fork-map</code> writes the bundle
-                    the <a href="/map/">Fork Map</a> renders (
-                    <code>gocar.forkmap.manifest.v1</code>). The map is a
-                    read-only view of what Gocar measured: it compares the
-                    measured surface across forks and releases, and it never
-                    fills a gap with a guess.
+                    Gocar needs a working Rust toolchain and lands on your
+                    <code>PATH</code> as <code>cargo gocar</code>; every command
+                    is run from the project it manages. It writes the
+                    era-correct binding unit — the engine plus the platform
+                    companion that fork is version-locked to — so the scaffold
+                    compiles as written.
                 </p>
             </div>
         </div>
@@ -65,17 +69,63 @@ import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
     <section class="section border-b border-border-divider last:border-b-0">
         <div class="content">
             <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
-                How the claims are checked
+                What a managed project looks like
             </h2>
             <div class="prose">
                 <p>
-                    The studies behind the map's badges ran on real crates.io
-                    artifacts — real compiles, real <code>rustc</code> versions,
-                    real kits — not on fixtures. They are readable in the map
-                    itself, from <a href="/map/#/docs">its documents index</a>,
-                    and every compile claim the map makes links the study it
-                    came from.
+                    A Gocar-managed project is an ordinary Cargo project: no
+                    proprietary lockfile, no custom build system, no runtime
+                    dependency.
                 </p>
+                <ul>
+                    <li>
+                        The fork binding is an ordinary Cargo package rename in
+                        <code>Cargo.toml</code>, and Gocar keeps it resolved and
+                        verified.
+                    </li>
+                    <li>
+                        The platform companion is locked to the exact version
+                        that fork needs.
+                    </li>
+                </ul>
+                <p>
+                    You can read the two files before installing anything: the
+                    <a href="/map/#/configure">Fork Map's Configure view</a>
+                    writes the same <code>Cargo.toml</code> and
+                    <code>main.rs</code> for any fork and release it has
+                    measured.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
+                The Fork Map dataset
+            </h2>
+            <div class="prose">
+                <p>
+                    <code>cargo gocar export-fork-map</code> writes the dataset
+                    the <a href="/map/">Fork Map</a> renders (the
+                    <code>gocar.forkmap.manifest.v1</code> bundle): the measured
+                    items and their digests, the item-set fingerprints that
+                    group releases into a generation, and the evidence each
+                    claim traces to. Every claim links the study it came from,
+                    and those studies are readable in the map itself.
+                </p>
+                <ul>
+                    <li>
+                        Compile badges are compile-backed: each one runs on real
+                        crates.io artifacts with real <code>rustc</code>
+                        versions, never on fixtures or uncompiled stubs.
+                    </li>
+                    <li>
+                        A generation is a measured fingerprint over item sets,
+                        not a compiler pass — where a compile has been run, the
+                        compile is the stronger evidence.
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
@@ -96,10 +146,50 @@ import { GOCAR_CRATE, mapDoc } from "../../data/gocar";
                 <p>
                     It also refuses what it cannot vouch for: a prerelease floor
                     (<a href={mapDoc("7")}>doc 07</a>), and a second fork
-                    anywhere in the dependency graph (
-                    <a href={mapDoc("10")}>doc 10</a>).
+                    anywhere in the dependency graph — including one a UI kit
+                    pulls in transitively (<a href={mapDoc("10")}>doc 10</a>).
                 </p>
             </div>
+        </div>
+    </section>
+
+    <section class="section border-b border-border-divider last:border-b-0">
+        <div class="content">
+            <h2 class="mb-8 text-h1 font-semibold tracking-[-0.01em] leading-tight">
+                Current release
+            </h2>
+            <div class="table-scroll">
+                <table class="min-w-96 max-sm:min-w-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fact</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {GOCAR_RELEASE_FACTS.map((fact) => (
+                            <tr>
+                                <td data-label="Fact">{fact.label}</td>
+                                <td
+                                    class="font-mono text-code"
+                                    data-label="Value"
+                                >
+                                    {fact.href ? (
+                                        <a href={fact.href}>{fact.value}</a>
+                                    ) : (
+                                        fact.value
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">
+                The version on this page is maintained by hand, so it can lag
+                the registry. <a href={GOCAR_CRATE.cratesUrl}>crates.io</a> is
+                the authority.
+            </p>
         </div>
     </section>
 </Layout>

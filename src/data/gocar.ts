@@ -32,6 +32,19 @@ export const GOCAR_CRATE = {
     description: "structural, verified dependency resolution for gpui fork crates",
 };
 
+/** The published crate's facts, for the Overview's release table. The version
+ * is maintained by hand — crates.io is the authority and this can lag it. */
+export const GOCAR_RELEASE_FACTS: { label: string; value: string; href?: string }[] = [
+    { label: "crate", value: GOCAR_CRATE.name },
+    { label: "version", value: GOCAR_CRATE.version },
+    { label: "published", value: GOCAR_CRATE.published },
+    {
+        label: "crates.io",
+        value: "crates.io/crates/cargo-gocar",
+        href: GOCAR_CRATE.cratesUrl,
+    },
+];
+
 export interface GocarCommand {
     /** The command line, as the tool spells it. */
     line: string;
