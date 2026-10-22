@@ -604,6 +604,28 @@
 	      "crateStatus": "published",
 	      "crateUrl": "https://crates.io/crates/gpui-pre"
 	    },
+	    {
+	      "name": "gpui-fast",
+	      "category": "Forks",
+	      "url": "https://github.com/longbridge/gpui-fast",
+	      "description": "Longbridge's performance fork: GPUI extracted from Zed as a standalone workspace, with the rendering and layout paths reworked to reuse what did not change between frames.",
+	      "stars": 268,
+	      "forks": 32,
+	      "crateStatus": "published",
+	      "crateUrl": "https://crates.io/crates/gpui-fast",
+	      "tag": "performance fork"
+	    },
+	    {
+	      "name": "bite-gpui",
+	      "category": "Forks",
+	      "url": "https://github.com/bite-gpui/bite-gpui",
+	      "description": "Zed's GPUI re-cut into a stack of installable layer crates (bite-gpui plus bite-gp-*), published so forks can depend on them instead of vendoring the upstream tree.",
+	      "stars": 1,
+	      "forks": 0,
+	      "crateStatus": "published",
+	      "crateUrl": "https://crates.io/crates/bite-gpui",
+	      "tag": "layer crates"
+	    },
     {
       "name": "WGPUI",
       "category": "Forks",
