@@ -1,5 +1,5 @@
 ---
-title: "Pixels In, Surfaces Under: gpui_interop vs. gpui-fast"
+title: "gpui_interop vs. gpui-fast: Texture or Subsurface"
 date: 2026-10-24
 description: "Two ways to put foreign pixels in a GPUI window: gpui_interop's zero-copy GPU texture bridge and gpui-fast's native OS surface composition."
 tags: ["showcase"]
