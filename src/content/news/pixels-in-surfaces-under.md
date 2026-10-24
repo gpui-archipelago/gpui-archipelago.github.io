@@ -6,15 +6,16 @@ tags: ["showcase"]
 ---
 
 <figure class="m-0 mb-8">
-  <div class="overflow-x-auto">
+  <picture>
+    <source media="(max-width: 40rem)" srcset="/images/pixels-in-surfaces-under-mobile.svg" />
     <img
       src="/images/pixels-in-surfaces-under.svg"
       width="920"
       height="440"
       alt="Two-panel diagram comparing gpui_interop (an external GPU texture sampled inside GPUI's scene) with gpui-fast native composition (native OS surfaces stacked by the compositor)."
-      style="display:block; width:100%; min-width:640px; height:auto;"
+      style="display:block; width:100%; height:auto;"
     />
-  </div>
+  </picture>
   <figcaption class="mt-3 text-small text-content-muted">Left: <code>gpui_interop</code> imports an external producer’s GPU image as a sampled texture inside GPUI’s scene. Right: <code>gpui-fast</code> stacks native OS surfaces and leaves compositing to the window compositor.</figcaption>
 </figure>
 
