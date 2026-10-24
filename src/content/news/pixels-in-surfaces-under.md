@@ -11,7 +11,7 @@ tags: ["showcase"]
     <img
       src="/images/pixels-in-surfaces-under.svg"
       width="920"
-      height="440"
+      height="485"
       alt="Two-panel diagram comparing gpui_interop (an external GPU texture sampled inside GPUI's scene) with gpui-fast native composition (native OS surfaces stacked by the compositor)."
       style="display:block; width:100%; height:auto;"
     />

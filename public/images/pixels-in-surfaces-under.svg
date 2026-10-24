@@ -1,85 +1,95 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 440" width="920" height="440" role="img" aria-labelledby="interop-diagram-title interop-diagram-desc" style="display:block; background:#fff8ed; font-family: &quot;JetBrains Mono&quot;, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 485" width="920" height="485" role="img" aria-labelledby="interop-diagram-title interop-diagram-desc" style="display:block; background:#fdf8f0; font-family: &quot;JetBrains Mono&quot;, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
   <title id="interop-diagram-title">gpui_interop versus gpui-fast native composition</title>
-  <desc id="interop-diagram-desc">Left: gpui_interop imports an external GPU producer's texture into GPUI's normal scene, where GPUI samples and composites it. Right: gpui-fast stacks a native child surface and a GPUI overlay surface, leaving compositing to the OS window compositor.</desc>
+  <desc id="interop-diagram-desc">Ownership legend and two diagrams. Left: gpui_interop imports an external GPU producer's shared texture into GPUI's normal scene, where GPUI samples and composites it. Right: gpui-fast stacks a native child surface and a GPUI overlay surface, leaving compositing to the OS window compositor.</desc>
   <defs>
-    <marker id="arrow-ocean" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#378fbd" />
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2b7bb9" />
     </marker>
   </defs>
 
-  <!-- Warm card frame, matching the site's sand/paper surfaces. -->
-  <rect x="0.75" y="0.75" width="918.5" height="438.5" rx="10" fill="#fff8ed" stroke="#dde1e3" stroke-width="1.5" />
+  <!-- ================= TOP LEGEND: WHAT COLORS MEAN ================= -->
+  <rect x="20" y="14" width="880" height="34" rx="6" fill="#f5ede0" stroke="#e2d9c8" stroke-width="1" />
+  <text x="36" y="35" fill="#5c6a72" font-size="11" font-weight="bold">OWNERSHIP:</text>
+
+  <rect x="120" y="23" width="16" height="16" rx="3" fill="#edf2f4" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="143" y="35" fill="#1d4358" font-size="10.5" font-weight="bold">GPUI Scene &amp; Elements (div, buttons, menus)</text>
+
+  <rect x="440" y="23" width="16" height="16" rx="3" fill="#e3f2fd" stroke="#2b7bb9" stroke-width="1.5" />
+  <text x="463" y="35" fill="#1b5e91" font-size="10.5" font-weight="bold">Shared GPU Texture (gpui_interop)</text>
+
+  <rect x="705" y="23" width="16" height="16" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+  <text x="728" y="35" fill="#92400e" font-size="10.5" font-weight="bold">Native OS Surface (WebView)</text>
 
   <!-- ================= LEFT PANEL: gpui_interop ================= -->
-  <rect x="20" y="20" width="430" height="400" rx="8" fill="#ffffff" stroke="#dde1e3" stroke-width="1.5" />
-  <path d="M28 20 H442 A8 8 0 0 1 450 28 V72 H20 V28 A8 8 0 0 1 28 20 Z" fill="#fae0b7" stroke="#dde1e3" stroke-width="1.5" />
-  <text x="40" y="46" fill="#174d68" font-size="16" font-weight="700">gpui_interop</text>
-  <text x="40" y="64" fill="#5b6368" font-size="11">Just a normal GPUI element inside GPUI's scene</text>
+  <rect x="20" y="60" width="430" height="405" rx="10" fill="#ffffff" stroke="#dcd6cc" stroke-width="1.5" />
+  <path d="M 20 70 Q 20 60 30 60 L 440 60 Q 450 60 450 70 L 450 118 L 20 118 Z" fill="#f7dfb9" />
+  <line x1="20" y1="118" x2="450" y2="118" stroke="#dcd6cc" stroke-width="1" />
+  <text x="38" y="88" fill="#1d4358" font-size="17" font-weight="bold">gpui_interop</text>
+  <text x="38" y="107" fill="#5c6a72" font-size="12">Just a normal GPUI element inside GPUI's scene</text>
 
-  <!-- External GPU producer -->
-  <rect x="40" y="95" width="390" height="54" rx="6" fill="#eaf4fa" stroke="#378fbd" stroke-width="1.5" />
-  <text x="55" y="118" fill="#1e6b98" font-size="12.5" font-weight="700">External GPU Producer (Vulkan / wgpu / Bevy)</text>
-  <text x="55" y="136" fill="#5b6368" font-size="10">Renders to a GPU image → exports dma-buf / D3D handle + fence</text>
+  <!-- Producer: shared GPU texture path. -->
+  <rect x="38" y="132" width="394" height="56" rx="6" fill="#e3f2fd" stroke="#2b7bb9" stroke-width="1.5" />
+  <text x="52" y="155" fill="#1b5e91" font-size="13" font-weight="bold">External GPU Producer (Vulkan / wgpu / Bevy)</text>
+  <text x="52" y="175" fill="#4a6b82" font-size="10">Renders to GPU image → exports dma-buf / D3D handle + fence</text>
 
-  <!-- Handoff arrow -->
-  <line x1="235" y1="149" x2="235" y2="252" stroke="#378fbd" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow-ocean)" />
-  <rect x="135" y="162" width="200" height="20" rx="4" fill="#ffffff" stroke="#dde1e3" />
-  <text x="235" y="176" fill="#1e6b98" font-size="10" text-anchor="middle">Zero-copy GPU texture handle</text>
+  <!-- GPUI window: the scene owns the layout and controls. -->
+  <rect x="38" y="230" width="394" height="218" rx="6" fill="#f8fafb" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="52" y="252" fill="#1d4358" font-size="13" font-weight="bold">GPUI Window (Single Scene)</text>
 
-  <!-- GPUI window: one scene -->
-  <rect x="40" y="195" width="390" height="205" rx="6" fill="#f7f1e5" stroke="#dde1e3" stroke-width="1.5" />
-  <text x="55" y="216" fill="#174d68" font-size="12" font-weight="700">GPUI Window (Single Scene / Normal Layout Tree)</text>
+  <rect x="52" y="266" width="100" height="168" rx="5" fill="#ffffff" stroke="#b8c7d1" stroke-width="1.2" />
+  <text x="62" y="286" fill="#5c6a72" font-size="11">div()</text>
+  <rect x="62" y="298" width="80" height="24" rx="4" fill="#edf2f4" stroke="#8fa6b5" stroke-width="1" />
+  <text x="102" y="314" fill="#1d4358" font-size="11" text-anchor="middle">Sidebar</text>
+  <rect x="62" y="330" width="80" height="24" rx="4" fill="#edf2f4" stroke="#8fa6b5" stroke-width="1" />
+  <text x="102" y="346" fill="#1d4358" font-size="11" text-anchor="middle">Scene Tree</text>
 
-  <!-- Sidebar -->
-  <rect x="55" y="230" width="95" height="155" rx="4" fill="#ffffff" stroke="#dde1e3" />
-  <text x="65" y="250" fill="#5b6368" font-size="10.5">div()</text>
-  <rect x="65" y="262" width="75" height="18" rx="3" fill="#fae0b7" stroke="#dde1e3" />
-  <text x="72" y="275" fill="#174d68" font-size="10">Sidebar</text>
-  <rect x="65" y="286" width="75" height="18" rx="3" fill="#fae0b7" stroke="#dde1e3" />
-  <text x="72" y="299" fill="#174d68" font-size="10">Scene Tree</text>
+  <rect x="164" y="266" width="254" height="168" rx="5" fill="#ffffff" stroke="#b8c7d1" stroke-width="1.2" />
+  <text x="176" y="286" fill="#5c6a72" font-size="11">div() (Flex Container)</text>
 
-  <!-- Main content -->
-  <rect x="160" y="230" width="255" height="155" rx="4" fill="#ffffff" stroke="#dde1e3" />
-  <text x="170" y="248" fill="#5b6368" font-size="10.5">div() (Flex Container)</text>
+  <!-- surface(): the imported texture, sampled by GPUI. -->
+  <rect x="176" y="298" width="230" height="124" rx="5" fill="#e3f2fd" stroke="#2b7bb9" stroke-width="2" />
+  <text x="188" y="319" fill="#1b5e91" font-size="13" font-weight="bold">surface() element</text>
+  <text x="188" y="336" fill="#2b7bb9" font-size="11">Sampled directly by GPUI renderer</text>
 
-  <!-- surface() is an ordinary element in the scene. -->
-  <rect x="172" y="258" width="231" height="115" rx="4" fill="#eaf4fa" stroke="#378fbd" stroke-width="2" />
-  <text x="182" y="276" fill="#1e6b98" font-size="12" font-weight="700">surface() element</text>
-  <text x="182" y="292" fill="#1e6b98" font-size="10">Sampled directly by GPUI renderer</text>
+  <rect x="188" y="382" width="98" height="28" rx="4" fill="#edf2f4" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="237" y="400" fill="#1d4358" font-size="11" font-weight="bold" text-anchor="middle">div() Button</text>
 
-  <!-- GPUI controls paint over the imported texture. -->
-  <rect x="184" y="335" width="85" height="26" rx="4" fill="#cb3b1b" stroke="#cb3b1b" />
-  <text x="226" y="352" fill="#ffffff" font-size="10.5" text-anchor="middle">div() Button</text>
+  <rect x="296" y="382" width="98" height="28" rx="4" fill="#edf2f4" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="345" y="400" fill="#1d4358" font-size="11" font-weight="bold" text-anchor="middle">HUD Overlay</text>
 
-  <rect x="278" y="335" width="112" height="26" rx="4" fill="#fae0b7" stroke="#dde1e3" />
-  <text x="334" y="352" fill="#174d68" font-size="10.5" text-anchor="middle">HUD Overlay</text>
+  <!-- Handoff: route down the window's right margin so it never crosses a label. -->
+  <path d="M 420 188 V 286 H 406 V 298" fill="none" stroke="#2b7bb9" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow-blue)" />
+  <rect x="176" y="198" width="230" height="22" rx="4" fill="#f5ede0" stroke="#2b7bb9" stroke-width="1" />
+  <text x="291" y="213" fill="#1b5e91" font-size="11" text-anchor="middle">Zero-copy GPU texture handle</text>
 
   <!-- ================= RIGHT PANEL: gpui-fast ================= -->
-  <rect x="470" y="20" width="430" height="400" rx="8" fill="#ffffff" stroke="#dde1e3" stroke-width="1.5" />
-  <path d="M478 20 H892 A8 8 0 0 1 900 28 V72 H470 V28 A8 8 0 0 1 478 20 Z" fill="#fae0b7" stroke="#dde1e3" stroke-width="1.5" />
-  <text x="490" y="46" fill="#174d68" font-size="16" font-weight="700">gpui-fast native composition</text>
-  <text x="490" y="64" fill="#5b6368" font-size="11">Separate OS surfaces stacked by the compositor</text>
+  <rect x="470" y="60" width="430" height="405" rx="10" fill="#ffffff" stroke="#dcd6cc" stroke-width="1.5" />
+  <path d="M 470 70 Q 470 60 480 60 L 890 60 Q 900 60 900 70 L 900 118 L 470 118 Z" fill="#f7dfb9" />
+  <line x1="470" y1="118" x2="900" y2="118" stroke="#dcd6cc" stroke-width="1" />
+  <text x="488" y="88" fill="#1d4358" font-size="17" font-weight="bold">gpui-fast native composition</text>
+  <text x="488" y="107" fill="#5c6a72" font-size="12">Separate OS surfaces stacked by the compositor</text>
 
-  <!-- Layer 1: GPUI overlay surface -->
-  <rect x="490" y="95" width="390" height="78" rx="6" fill="#fdeee9" stroke="#ef4e28" stroke-width="1.5" stroke-dasharray="5 3" />
-  <text x="505" y="116" fill="#cb3b1b" font-size="12" font-weight="700">1. GPUI Overlay Subsurface (Top OS Layer)</text>
-  <text x="505" y="133" fill="#5b6368" font-size="10">Separate transparent surface so menus stay above WebView</text>
-  <rect x="505" y="142" width="110" height="22" rx="3" fill="#fae0b7" stroke="#ef4e28" />
-  <text x="560" y="157" fill="#cb3b1b" font-size="10" text-anchor="middle">Dropdown Menu</text>
-  <rect x="625" y="142" width="95" height="22" rx="3" fill="#fae0b7" stroke="#ef4e28" />
-  <text x="672" y="157" fill="#cb3b1b" font-size="10" text-anchor="middle">Popover HUD</text>
+  <!-- Layer 1: GPUI overlay, still GPUI-owned. -->
+  <rect x="488" y="132" width="394" height="86" rx="6" fill="#f8fafb" stroke="#4a6b82" stroke-width="1.5" stroke-dasharray="5 3" />
+  <text x="502" y="154" fill="#1d4358" font-size="13" font-weight="bold">1. GPUI Overlay Subsurface (Top OS Layer)</text>
+  <text x="502" y="172" fill="#5c6a72" font-size="11">Separate transparent GPUI surface so menus stay on top</text>
 
-  <!-- Layer 2: native child surface -->
-  <rect x="490" y="195" width="390" height="90" rx="6" fill="#f7f1e5" stroke="#ef4e28" stroke-width="1.5" />
-  <text x="505" y="218" fill="#cb3b1b" font-size="12" font-weight="700">2. Native Child Subsurface (WebView / OS Widget)</text>
-  <text x="505" y="236" fill="#5b6368" font-size="10.5">• Foreign stack owns its own pixels &amp; presentation</text>
-  <text x="505" y="253" fill="#5b6368" font-size="10.5">• GPUI renderer never sees or samples these pixels</text>
-  <text x="505" y="270" fill="#5b6368" font-size="10.5">• Receives OS scroll, input, and accessibility directly</text>
+  <rect x="502" y="182" width="115" height="26" rx="4" fill="#edf2f4" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="559" y="199" fill="#1d4358" font-size="11" font-weight="bold" text-anchor="middle">Dropdown Menu</text>
+  <rect x="627" y="182" width="105" height="26" rx="4" fill="#edf2f4" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="679" y="199" fill="#1d4358" font-size="11" font-weight="bold" text-anchor="middle">Popover HUD</text>
 
-  <!-- Layer 3: the ordinary GPUI window -->
-  <rect x="490" y="307" width="390" height="93" rx="6" fill="#ffffff" stroke="#dde1e3" stroke-width="1.5" />
-  <text x="505" y="330" fill="#174d68" font-size="12" font-weight="700">3. GPUI Top-Level Window (Base OS Layer)</text>
-  <text x="505" y="348" fill="#5b6368" font-size="10.5">Normal GPUI chrome, sidebars, and tabs around the hole</text>
-  <rect x="505" y="360" width="360" height="26" rx="4" fill="#f7f1e5" stroke="#dde1e3" />
-  <text x="685" y="377" fill="#5b6368" font-size="10.5" text-anchor="middle">OS Window Compositor merges layers 1 + 2 + 3</text>
+  <!-- Layer 2: native OS surface, not an error state. -->
+  <rect x="488" y="234" width="394" height="96" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.8" />
+  <text x="502" y="257" fill="#92400e" font-size="13" font-weight="bold">2. Native Child Subsurface (WebView / OS Widget)</text>
+  <text x="502" y="277" fill="#5c6a72" font-size="11">• Foreign stack owns its own pixels &amp; presentation</text>
+  <text x="502" y="295" fill="#5c6a72" font-size="11">• GPUI renderer never sees or samples these pixels</text>
+  <text x="502" y="313" fill="#5c6a72" font-size="11">• Receives OS scroll, input, and accessibility directly</text>
+
+  <!-- Layer 3: the ordinary GPUI window around the hole. -->
+  <rect x="488" y="346" width="394" height="102" rx="6" fill="#f8fafb" stroke="#4a6b82" stroke-width="1.5" />
+  <text x="502" y="369" fill="#1d4358" font-size="13" font-weight="bold">3. GPUI Top-Level Window (Base OS Layer)</text>
+  <text x="502" y="388" fill="#5c6a72" font-size="11">Normal GPUI chrome, sidebars, and tabs around the hole</text>
+  <rect x="502" y="402" width="366" height="30" rx="4" fill="#f5ede0" stroke="#dcd6cc" stroke-width="1" />
+  <text x="685" y="421" fill="#5c6a72" font-size="11" font-weight="bold" text-anchor="middle">OS Window Compositor merges layers 1 + 2 + 3</text>
 </svg>
