@@ -51,4 +51,19 @@
     		border-left: 2px solid var(--border-accent);
     		color: var(--content-muted);
     	}
+
+    	/* Fenced code inside prose: compiler errors and ASCII diagrams run past
+    	   the measure, so give them the command-block treatment (warm wash,
+    	   hairline border) and let them scroll instead of clipping at the
+    	   column edge. */
+    	.prose pre {
+    		margin: 0 0 var(--spacing-md);
+    		padding: var(--spacing-sm) 16px;
+    		background: var(--surface-warm);
+    		border: 1px solid var(--border-subtle);
+    		border-radius: var(--radius-md);
+    		font-size: var(--text-code);
+    		line-height: var(--leading-code);
+    		overflow-x: auto;
+    	}
 }
